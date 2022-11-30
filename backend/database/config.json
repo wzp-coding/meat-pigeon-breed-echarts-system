@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "wzp",
+    "password": "12345",
+    "database": "pigeon",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "wzp",
+    "password": "12345",
+    "database": "pigeon",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "wzp",
+    "password": "12345",
+    "database": "pigeon",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+}
