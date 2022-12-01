@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@types/node": "*",
+    "crypto-js": "^4.1.1",
     "egg": "^3",
     "egg-scripts": "^2",
     "egg-sequelize": "^6.0.0",

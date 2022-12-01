@@ -2,6 +2,8 @@
 
 'use strict';
 
+const { SECRET_KEYS } = require('../app/const');
+
 /**
  * @param {Egg.EggAppInfo} appInfo app info
  */
@@ -25,12 +27,14 @@ module.exports = appInfo => {
     security: {
       csrf: {
         enable: true,
-        headerName: 'token',
+        ignore: '/login',
       },
     },
-    // 只对 /api 前缀的 url 路径生效
     errorHandler: {
       match: '/*',
+    },
+    checkLogin: {
+      ignore: '/login',
     },
     validate: {
       convert: true,
@@ -38,10 +42,10 @@ module.exports = appInfo => {
   });
 
   // use for cookie sign key, should change to your own and keep security
-  config.keys = appInfo.name + '_meat-pigeon';
+  config.keys = SECRET_KEYS;
 
   // 加载 errorHandler 中间件
-  config.middleware = ['errorHandler'];
+  config.middleware = [ 'errorHandler', 'checkLogin' ];
 
   // add your user config here
   const userConfig = {

@@ -40,7 +40,6 @@ class PigeonCategoryManageController extends Controller {
 
   async create() {
     const ctx = this.ctx;
-    console.log('ctx.request.body: ', ctx.request.body);
     ctx.validate(validRule, ctx.request.body);
     const data = await ctx.model.PigeonCategoryManage.create(ctx.request.body);
     if (!data) {

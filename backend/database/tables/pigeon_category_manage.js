@@ -30,8 +30,9 @@ module.exports = ({ INTEGER, STRING }) => {
     },
     feature: {
       type: STRING,
-      allowNull: false,
+      allowNull: true,
       comment: '特点',
+      defaultValue: '',
     },
   };
   Object.keys(schema).forEach(key => (schema[key].field = snakeCase(key)));

@@ -1,4 +1,3 @@
-// app/middleware/error_handler.js
 module.exports = () => {
   return async function errorHandler(ctx, next) {
     try {

@@ -15,5 +15,12 @@ module.exports = app => {
   router.get('/feedManage/amount', controller.feedManage.amountGroupByCategory);
   router.resources('feed_manage', '/feedManage', controller.feedManage);
   // 肉鸽种类管理
-  router.resources('pigeon_category_manage', '/pigeonCategoryManage', controller.pigeonCategoryManage);
+  router.resources(
+    'pigeon_category_manage',
+    '/pigeonCategoryManage',
+    controller.pigeonCategoryManage
+  );
+  // 用户管理
+  router.resources('user', '/user', controller.user);
+  router.post('/login', controller.user.login);
 };

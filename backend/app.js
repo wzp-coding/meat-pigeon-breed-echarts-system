@@ -18,7 +18,7 @@ module.exports = class App {
   }
 
   serverDidReady() {
-    // require('./app/mock/index').destory(this.app);
-    // require('./app/mock/index').init(this.app);
+    require('./app/mock/index').destory(this.app);
+    require('./app/mock/index').init(this.app);
   }
 };
