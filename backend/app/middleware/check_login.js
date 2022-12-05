@@ -7,7 +7,7 @@ module.exports = () => {
     if (!userToken) {
       ctx.body = {
         msg: '用户未登录',
-        code: -1,
+        code: 401,
       };
       return;
     }
@@ -19,7 +19,7 @@ module.exports = () => {
       cookieToken !== SECRET_KEYS ||
       cookieToken !== csrfToken
     ) {
-      ctx.status = 403;
+      ctx.status = 401;
       ctx.body = {
         code: -1,
         msg: '缺少csrfToken或者错误',

@@ -29,6 +29,7 @@ module.exports = appInfo => {
         enable: true,
         ignore: '/login',
       },
+      domainWhiteList: ['http://localhost:5173'],
     },
     errorHandler: {
       match: '/*',
@@ -39,13 +40,17 @@ module.exports = appInfo => {
     validate: {
       convert: true,
     },
+    cors: {
+      origin: '*',
+      allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH',
+    },
   });
 
   // use for cookie sign key, should change to your own and keep security
   config.keys = SECRET_KEYS;
 
   // 加载 errorHandler 中间件
-  config.middleware = [ 'errorHandler', 'checkLogin' ];
+  config.middleware = ['errorHandler', 'checkLogin'];
 
   // add your user config here
   const userConfig = {
