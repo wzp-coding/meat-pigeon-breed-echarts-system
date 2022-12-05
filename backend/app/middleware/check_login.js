@@ -3,7 +3,7 @@ const { SECRET_KEYS } = require('../const');
 module.exports = () => {
   return async function checkLogin(ctx, next) {
     // 获取 用户token
-    const userToken = ctx.headers['token'];
+    const userToken = ctx.headers.token;
     if (!userToken) {
       ctx.body = {
         msg: '用户未登录',
