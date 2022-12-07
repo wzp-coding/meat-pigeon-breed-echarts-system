@@ -25,13 +25,15 @@ export default function () {
   const handleSubmit = async () => {
     const values = await form.validateFields();
     setLoading(true);
-    const { userInfo } = await serviceLogin({
+    const { userInfo = {}, code } = await serviceLogin({
       account: values.account.trim(),
-      password: values.password.trim(),
+      password:values.password.trim()
     });
-    dispatch(SET_USER_INFO(userInfo));
-    navigate(redirectUrl);
     setLoading(false);
+    if(code === 1) {
+      dispatch(SET_USER_INFO(userInfo));
+      navigate(redirectUrl);
+    }
   };
 
   useEffect(() => {
