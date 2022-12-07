@@ -21,3 +21,16 @@ declare namespace LoginType {
         }
     }
 }
+declare namespace UserType {
+    export interface CreateReq {
+        account: string
+        password: string,
+        name?: string
+        avatar?: string,
+        phone?: string
+        email?: string,
+    }
+    
+    export type UpdateReq = Partial<Omit<CreateReq, 'account'>>
+
+}

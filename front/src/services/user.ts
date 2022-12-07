@@ -5,33 +5,37 @@ export function serviceLogin(data: LoginType.Req) {
   return http.post('/login', data)
 }
 
-// 通过token登录
-export function serviceLoginByToken(token: string) {
-  return http.get('/accessToken', {
-    params: { token }
-  })
+// 创建用户信息
+export function serviceCreateUser(data: UserType.CreateReq) {
+  return http.post('/user', data)
 }
 
-// 退出登录
-export function serviceLogout() {
-  return http.get('/logout')
+// 检查用户名重复
+export function serviceCheckAccount(data: { account: string }) {
+  return http.post('/user/check_account', data, {
+    headers: {
+      successAlert: false,
+      errorAlert: false
+    }
+  })
 }
 
 // 更新用户信息
-export function serviceUpdateUser(data: object) {
-  return http.post('/user/update', data, {
-    headers: { successAlert: 'true' }
-  })
+export function serviceUpdateUser(id: string, data: UserType.UpdateReq) {
+  return http.put('/user/' + id, data)
 }
 
-// 获取用户配置信息
-export function serviceGetUserConfig() {
-  return http.get('/userConfig')
+// 获取用户信息
+export function serviceGetUserById(id: string) {
+  return http.get('/user/' + id)
 }
 
-// 更新用户配置信息
-export function serviceUpdateUserConfig(data: object) {
-  return http.put('/userConfig', data, {
-    headers: { successAlert: 'true' }
-  })
+// 获取用户列表
+export function serviceGetUserList(params: CommonType.Pagination) {
+  return http.get('/user', { params })
+}
+
+// 删除用户信息
+export function serviceDeleteUser(id: string) {
+  return http.delete('/user/' + id)
 }
