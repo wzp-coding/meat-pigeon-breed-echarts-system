@@ -59,7 +59,7 @@ const HomeHeader: React.FC<Props> = function ({ collapsed, setCollapsed }) {
   const [messageList, setMessageList] = useState([]);
   const [unReadCount, setUnReadCount] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const userInfo = JSON.parse(localStorage.getItem(LOCAL_STORAGE.USER)!);
+  const userInfo = JSON.parse(localStorage.getItem(LOCAL_STORAGE.USER)!) || {};
 
   useEffect(() => {}, []);
 
