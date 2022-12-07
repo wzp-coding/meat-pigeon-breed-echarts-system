@@ -12,7 +12,7 @@ module.exports = () => {
       return;
     }
     // 验证接口权限
-    const cookieToken = ctx.cookies.get('csrfToken', { signed: false });
+    const cookieToken = ctx.cookies.get('csrfToken', { encrypt: true });
     const csrfToken = ctx.headers['x-csrf-token'];
     if (
       !cookieToken ||

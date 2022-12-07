@@ -33,7 +33,10 @@ class UserController extends Controller {
       limit: pageSize,
       offset: pageSize * (page - 1),
     };
-    ctx.body = await ctx.model.User.findAndCountAll(query);
+    const data = await ctx.model.User.findAndCountAll(query);
+    data.rows = data.rows.filter(i => i.role === 1);
+    data.count -= 1;
+    ctx.body = data;
   }
 
   async show() {
@@ -59,7 +62,10 @@ class UserController extends Controller {
     const ctx = this.ctx;
     ctx.validate({ id: 'int' }, ctx.params);
     const data = await ctx.model.User.findByPk(ctx.params.id);
-    ctx.validate(validRule, ctx.request.body);
+    ctx.validate(
+      Object.assign(validRule, { password: 'string?' }),
+      ctx.request.body
+    );
     if (!data) {
       ctx.body = { code: -1, msg: '更新失败' };
       return;
@@ -81,6 +87,21 @@ class UserController extends Controller {
     ctx.body = { code: 1, msg: '删除成功' };
   }
 
+  // 校验账号是否重复
+  async checkAccount() {
+    const ctx = this.ctx;
+    ctx.validate({ account: 'string' }, ctx.request.body);
+    const { account } = ctx.request.body;
+    const data = await ctx.model.User.findOne({
+      where: { account },
+    });
+    if (data) {
+      ctx.body = { code: -1, msg: '账号已存在' };
+      return;
+    }
+    ctx.body = { code: 1, msg: '账号合法' };
+  }
+
   // 支持账号，邮箱，手机号登陆
   async login() {
     const ctx = this.ctx;
@@ -98,7 +119,11 @@ class UserController extends Controller {
       ctx.body = { code: -1, msg: '用户名或密码错误' };
       return;
     }
-    ctx.cookies.set('csrfToken', SECRET_KEYS);
+    ctx.cookies.set('csrfToken', SECRET_KEYS, {
+      httpOnly: true,
+      signed: true,
+      encrypt: true,
+    });
     userInfo.csrfToken = SECRET_KEYS;
     userInfo.token = encrypto(`${account}_${password}`);
     ctx.status = 200;

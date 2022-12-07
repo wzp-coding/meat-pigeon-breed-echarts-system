@@ -26,7 +26,7 @@ module.exports = appInfo => {
     },
     security: {
       csrf: {
-        enable: true,
+        enable: false,
         ignore: '/login',
       },
       domainWhiteList: ['http://localhost:5173'],
@@ -41,8 +41,10 @@ module.exports = appInfo => {
       convert: true,
     },
     cors: {
-      origin: '*',
+      origin: 'http://localhost:5173',
       allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH',
+      // cookie 跨域配置
+      credentials: true,
     },
   });
 

@@ -23,4 +23,5 @@ module.exports = app => {
   // 用户管理
   router.resources('user', '/user', controller.user);
   router.post('/login', controller.user.login);
+  router.post('/user/check_account', controller.user.checkAccount);
 };
