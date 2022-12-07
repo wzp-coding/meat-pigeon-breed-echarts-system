@@ -36,9 +36,9 @@ const httpInstance: IAxiosInstance & AxiosInstance = axios.create({
 httpInstance.defaults.headers.common.isLoading = 'true'
 httpInstance.defaults.headers.common.errorAlert = 'true'
 httpInstance.defaults.headers.common.successAlert = 'true'
+httpInstance.defaults.withCredentials = true;
 Object.setPrototypeOf(httpInstance, axios)
 
-// 主要处理防止store未挂载访问
 httpInstance.interceptors.request.use(function (config) {
   const method = config.method
   const userState: LoginType.Res['userInfo'] = JSON.parse(localStorage.getItem(LOCAL_STORAGE.USER)!) || {};
@@ -46,7 +46,6 @@ httpInstance.interceptors.request.use(function (config) {
   if (userState.token && config.headers) {
     config.headers.token = userState.token;
     config.headers['x-csrf-token'] = userState.csrfToken!;
-    config.headers.Cookie = 'csrfToken=' + userState.csrfToken;
   }
 
   const data: Record<string, any> = {}

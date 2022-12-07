@@ -1,6 +1,8 @@
 export * from './helper'
 export * from './date'
+export * from './aes'
 import type { RcFile } from 'antd/es/upload'
+import { isString } from 'lodash'
 
 export function filterOption(input: string, option: any): boolean {
   if (Array.isArray(option.options)) {
@@ -36,4 +38,18 @@ export function base64ToBlob(base64Data: string) {
   return new Blob([u8Arr], {
     type: fileType
   })
+}
+
+export const trimInputValue = (e:any) => e.target?.value?.replace(/(^\s*)|(\s*$)/g, '');
+
+export const trimObjectValue = (obj: any) => {
+  const trimObj:any = {};
+  Object.keys(obj).forEach(key => {
+    if(isString(obj[key])) {
+      trimObj[key] = obj[key].trim();
+      return;
+    }
+    trimObj[key] = obj[key];
+  })
+  return trimObj
 }
