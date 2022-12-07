@@ -27,6 +27,8 @@
     "blueimp-md5": "^2.19.0",
     "bytes": "^3.1.2",
     "classnames": "^2.3.1",
+    "cos-js-sdk-v5": "^1.4.14",
+    "crypto-js": "^4.1.1",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
     "query-string": "^7.1.1",
@@ -44,6 +46,7 @@
   "devDependencies": {
     "@types/blueimp-md5": "^2.18.0",
     "@types/bytes": "^3.1.1",
+    "@types/crypto-js": "^4.1.1",
     "@types/lodash": "^4.14.182",
     "@types/node": "^18.7.2",
     "@types/react": "^18.0.17",

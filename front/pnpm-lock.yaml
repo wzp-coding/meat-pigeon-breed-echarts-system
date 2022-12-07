@@ -6,6 +6,7 @@ specifiers:
   '@toast-ui/editor': ^3.2.0
   '@types/blueimp-md5': ^2.18.0
   '@types/bytes': ^3.1.1
+  '@types/crypto-js': ^4.1.1
   '@types/lodash': ^4.14.182
   '@types/node': ^18.7.2
   '@types/react': ^18.0.17
@@ -23,6 +24,8 @@ specifiers:
   blueimp-md5: ^2.19.0
   bytes: ^3.1.2
   classnames: ^2.3.1
+  cos-js-sdk-v5: ^1.4.14
+  crypto-js: ^4.1.1
   eslint: ^8.21.0
   eslint-plugin-react: 7.30.1
   lodash: ^4.17.21
@@ -37,7 +40,6 @@ specifiers:
   redux: ^4.2.0
   redux-thunk: ^2.4.1
   sass: ^1.54.4
-  seamless-immutable: ^7.1.4
   typescript: ^4.7.4
   use-keep-state: ^1.3.0
   vite: ^3.0.7
@@ -46,13 +48,14 @@ dependencies:
   '@ant-design/icons': 4.7.0_biqbaboplfbrettd7655fr4n2y
   '@reduxjs/toolkit': 1.8.4_kkwg4cbsojnjnupd3btipussee
   '@toast-ui/editor': 3.2.0
-  '@types/seamless-immutable': 7.1.16
   '@vitejs/plugin-react': 2.2.0_vite@3.0.7
   antd: 4.22.4_biqbaboplfbrettd7655fr4n2y
   axios: 0.27.2
   blueimp-md5: 2.19.0
   bytes: 3.1.2
   classnames: 2.3.1
+  cos-js-sdk-v5: 1.4.14
+  crypto-js: 4.1.1
   lodash: 4.17.21
   moment: 2.29.4
   query-string: 7.1.1
@@ -65,12 +68,12 @@ dependencies:
   redux: 4.2.0
   redux-thunk: 2.4.1_redux@4.2.0
   sass: 1.54.4
-  seamless-immutable: 7.1.4
   use-keep-state: 1.3.0
 
 devDependencies:
   '@types/blueimp-md5': 2.18.0
   '@types/bytes': 3.1.1
+  '@types/crypto-js': 4.1.1
   '@types/lodash': 4.14.182
   '@types/node': 18.7.2
   '@types/react': 18.0.17
@@ -78,6 +81,7 @@ devDependencies:
   '@types/react-dom': 18.0.6
   '@types/react-redux': 7.1.24
   '@types/react-router-dom': 5.3.3
+  '@types/seamless-immutable': 7.1.16
   '@typescript-eslint/eslint-plugin': 5.33.0_njno5y7ry2l2lcmiu4tywxkwnq
   '@typescript-eslint/parser': 5.33.0_qugx7qdu5zevzvxaiqyxfiwquq
   '@vitejs/plugin-react-refresh': 1.3.6
@@ -698,6 +702,10 @@ packages:
     resolution: {integrity: sha512-lOGyCnw+2JVPKU3wIV0srU0NyALwTBJlVSx5DfMQOFuuohA8y9S8orImpuIQikZ0uIQ8gehrRjxgQC1rLRi11w==}
     dev: true
 
+  /@types/crypto-js/4.1.1:
+    resolution: {integrity: sha512-BG7fQKZ689HIoc5h+6D2Dgq1fABRa0RbBWKBd9SP/MVRVXROflpm5fhwyATX5duFmbStzyzyycPB8qUYKDH3NA==}
+    dev: true
+
   /@types/history/4.7.11:
     resolution: {integrity: sha512-qjDJRrmvBMiTx+jyLxvLfJU7UznFuokDv4f3WRuriHKERccVpFU+8XMQUAbDzoiJCsmexxRExQeMwwCdamSKDA==}
     dev: true
@@ -769,7 +777,7 @@ packages:
 
   /@types/seamless-immutable/7.1.16:
     resolution: {integrity: sha512-aoi1L9llrDtviLpv+2VoYM9OgAAsoDtHL8uw4mokuNXl0qwRoen/t4aSAZpoTJVQ2DIdhZQ55L0R0duwz19WEw==}
-    dev: false
+    dev: true
 
   /@types/use-sync-external-store/0.0.3:
     resolution: {integrity: sha512-EwmlvuaxPNej9+T4v5AuBPJa2x2UOJVdjCtDHgcDqitUeOtjnJKJ+apYjVcAoBEMjKW1VVFGZLUb5+qqa09XFA==}
@@ -931,6 +939,11 @@ packages:
       vite: 3.0.7_sass@1.54.4
     transitivePeerDependencies:
       - supports-color
+    dev: false
+
+  /@xmldom/xmldom/0.8.6:
+    resolution: {integrity: sha512-uRjjusqpoqfmRkTaNuLJ2VohVr67Q5YwDATW3VU7PfzTj6IRaihGrYI7zckGZjxQPBIp63nfvJbM+Yu5ICh0Bg==}
+    engines: {node: '>=10.0.0'}
     dev: false
 
   /acorn-jsx/5.3.2_acorn@8.8.0:
@@ -1220,6 +1233,12 @@ packages:
       toggle-selection: 1.0.6
     dev: false
 
+  /cos-js-sdk-v5/1.4.14:
+    resolution: {integrity: sha512-nw4kQijqyXSzRElL9HAKGWA96SQk6Sfx/SvJrGra2cXo2L4ipL3Y0wNnH+Wga1f7iigun85+nIk9BrL5+iBJOg==}
+    dependencies:
+      '@xmldom/xmldom': 0.8.6
+    dev: false
+
   /cross-spawn/7.0.3:
     resolution: {integrity: sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==}
     engines: {node: '>= 8'}
@@ -1228,6 +1247,10 @@ packages:
       shebang-command: 2.0.0
       which: 2.0.2
     dev: true
+
+  /crypto-js/4.1.1:
+    resolution: {integrity: sha512-o2JlM7ydqd3Qk9CA0L4NL6mTzU2sdx96a+oOfPu8Mkl/PK51vSyoi8/rQ8NknZtk44vq15lmhAj9CIAGwgeWKw==}
+    dev: false
 
   /css-box-model/1.2.1:
     resolution: {integrity: sha512-a7Vr4Q/kd/aw96bnJG332W9V9LkJO69JRcaCYDUqjp6/z0w6VcZjgAcTbgFxEPfBgdnAwlh3iwu+hLopa+flJw==}
@@ -3411,10 +3434,6 @@ packages:
     resolution: {integrity: sha512-hxpAR6AN+Gh53AdAimHM6C8oTN1ppwVZITihix+WqalywBeFcQ6LdQP5ABNl26nX8GTEL7VT+b8lKpdqq65wXg==}
     dependencies:
       compute-scroll-into-view: 1.0.17
-    dev: false
-
-  /seamless-immutable/7.1.4:
-    resolution: {integrity: sha512-XiUO1QP4ki4E2PHegiGAlu6r82o5A+6tRh7IkGGTVg/h+UoeX4nFBeCGPOhb4CYjvkqsfm/TUtvOMYC1xmV30A==}
     dev: false
 
   /semver/6.3.0:
