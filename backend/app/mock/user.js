@@ -2,7 +2,7 @@ const { encrypto } = require('../utils/index');
 const { mock, Random } = require('mockjs');
 Random.extend({
   phone() {
-    const phonePrefixs = ['132', '135', '189'];
+    const phonePrefixs = [ '132', '135', '189' ];
     return this.pick(phonePrefixs) + mock(/\d{8}/);
   },
 });
@@ -15,7 +15,8 @@ module.exports = new Array(10)
       account,
       name: Random.cname(),
       password: encrypto(account),
-      avatar: Random.image('200x100', '#ffcc33', '#FFF', 'png', account),
+      // avatar: Random.image('200x100', '#ffcc33', '#FFF', 'png', account),
+      avatar: 'http://blog-images-1302031947.cos.ap-guangzhou.myqcloud.com/images/default.png',
       phone: Random.phone(),
       email: Random.email('qq.com'),
     };
@@ -24,7 +25,7 @@ module.exports = new Array(10)
     account: 'admin',
     name: '超级管理员',
     password: encrypto('admin'),
-    avatar: Random.image('200x100', '#ffcc33', '#FFF', 'png', 'admin'),
+    avatar: 'http://blog-images-1302031947.cos.ap-guangzhou.myqcloud.com/images/default.png',
     role: 0,
     phone: '13143758550',
     email: '2236277721@qq.com',
