@@ -2,14 +2,13 @@ const Controller = require('egg').Controller;
 
 // 定义创建接口的请求参数规则
 const validRule = {
-  category: 'string',
-  yearEggs: 'string',
-  adultWeight: 'string',
-  fourAgeWeight: 'string',
-  feature: 'string?',
+  name: 'string',
+  description: 'string?',
+  treatment: 'string?',
+  pictures: 'string?',
 };
 
-class PigeonCategoryManageController extends Controller {
+class IllnessManageController extends Controller {
   async index() {
     const ctx = this.ctx;
     ctx.validate(
@@ -19,7 +18,7 @@ class PigeonCategoryManageController extends Controller {
       },
       ctx.query
     );
-    const data = await ctx.service.pigeonCategoryManage.findAllPigeonCategory();
+    const data = await ctx.service.illnessManage.findAllIllness();
     if (!data) {
       ctx.body = { code: -1, msg: '查询失败' };
       return;
@@ -31,7 +30,7 @@ class PigeonCategoryManageController extends Controller {
   async show() {
     const ctx = this.ctx;
     ctx.validate({ id: 'int' }, ctx.params);
-    const data = await ctx.model.PigeonCategoryManage.findByPk(ctx.params.id);
+    const data = await ctx.model.IllnessManage.findByPk(ctx.params.id);
     if (!data) {
       ctx.body = { code: -1, msg: '查询失败' };
       return;
@@ -43,7 +42,7 @@ class PigeonCategoryManageController extends Controller {
   async create() {
     const ctx = this.ctx;
     ctx.validate(validRule, ctx.request.body);
-    const data = await ctx.model.PigeonCategoryManage.create(ctx.request.body);
+    const data = await ctx.model.IllnessManage.create(ctx.request.body);
     if (!data) {
       ctx.body = { code: -1, msg: '创建失败' };
       return;
@@ -56,7 +55,7 @@ class PigeonCategoryManageController extends Controller {
     const ctx = this.ctx;
     ctx.validate({ id: 'int' }, ctx.params);
     ctx.validate(validRule, ctx.request.body);
-    const data = await ctx.model.PigeonCategoryManage.findByPk(ctx.params.id);
+    const data = await ctx.model.IllnessManage.findByPk(ctx.params.id);
     if (!data) {
       ctx.body = { code: -1, msg: '更新失败' };
       return;
@@ -68,7 +67,7 @@ class PigeonCategoryManageController extends Controller {
   async destroy() {
     const ctx = this.ctx;
     ctx.validate({ id: 'int' }, ctx.params);
-    const data = await ctx.model.PigeonCategoryManage.findByPk(ctx.params.id);
+    const data = await ctx.model.IllnessManage.findByPk(ctx.params.id);
     if (!data) {
       ctx.body = { code: -1, msg: '删除失败' };
       return;
@@ -79,4 +78,4 @@ class PigeonCategoryManageController extends Controller {
   }
 }
 
-module.exports = PigeonCategoryManageController;
+module.exports = IllnessManageController;

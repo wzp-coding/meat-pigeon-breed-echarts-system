@@ -1,7 +1,5 @@
 const Controller = require('egg').Controller;
 
-const { toInteger } = require('lodash');
-const { Op } = require('sequelize');
 const { SECRET_KEYS } = require('../const');
 const { decrypto, encrypto } = require('../utils');
 
@@ -15,11 +13,9 @@ const validRule = {
   phone: 'string?',
   email: 'string?',
 };
-
 class UserController extends Controller {
   async index() {
     const ctx = this.ctx;
-    let { page, pageSize } = ctx.query;
     ctx.validate(
       {
         page: 'int',
@@ -27,23 +23,25 @@ class UserController extends Controller {
       },
       ctx.query
     );
-    page = toInteger(page);
-    pageSize = toInteger(pageSize);
-    const query = {
-      limit: pageSize,
-      offset: pageSize * (page - 1),
-    };
-    const data = await ctx.model.User.findAndCountAll(query);
-    data.rows = data.rows.filter(i => i.role === 1);
-    data.count -= 1;
-    ctx.body = data;
+    const data = await ctx.service.user.findAllUser();
+    if (!data) {
+      ctx.body = { code: -1, msg: '查询失败' };
+      return;
+    }
+    ctx.status = 200;
+    ctx.body = { code: 1, msg: '查询成功', data };
   }
 
   async show() {
     const ctx = this.ctx;
     ctx.validate({ id: 'int' }, ctx.params);
     const data = await ctx.model.User.findByPk(ctx.params.id);
-    ctx.body = data || {};
+    if (!data) {
+      ctx.body = { code: -1, msg: '查询失败' };
+      return;
+    }
+    ctx.status = 200;
+    ctx.body = { code: 1, msg: '查询成功', data };
   }
 
   async create() {
@@ -107,9 +105,7 @@ class UserController extends Controller {
     const ctx = this.ctx;
     ctx.validate(validRule, ctx.request.body);
     const { account, password } = ctx.request.body;
-    const data = await ctx.model.User.findOne({
-      where: { [Op.or]: [{ account }, { email: account }, { phone: account }] },
-    });
+    const data = await ctx.service.user.findAccount();
     if (!data) {
       ctx.body = { code: -1, msg: '不存在此账户' };
       return;
