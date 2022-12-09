@@ -8,17 +8,19 @@ module.exports = class App {
 
     // 同步数据库
     await app.model
-      .sync()
+      .sync({
+        alter: true,
+      })
       .then(() => {
-        app.logger.info('Sync Tables...');
+        app.logger.info('模型更新同步成功');
       })
       .catch(err => {
         app.logger.error(err);
       });
   }
 
-  serverDidReady() {
-    require('./app/mock/index').destory(this.app);
-    require('./app/mock/index').init(this.app);
+  async serverDidReady() {
+    await require('./app/mock/index').destory(this.app);
+    await require('./app/mock/index').init(this.app);
   }
 };

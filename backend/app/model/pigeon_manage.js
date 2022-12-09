@@ -63,6 +63,7 @@ module.exports = app => {
       foreignKey: 'category_id',
       onDelete: 'NO ACTION',
       onUpdate: 'NO ACTION',
+      as: 'categoryInfo',
     });
   };
   return pigeonManage;

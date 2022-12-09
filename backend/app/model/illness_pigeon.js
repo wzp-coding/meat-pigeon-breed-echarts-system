@@ -29,15 +29,17 @@ module.exports = app => {
     comment: '疾病id和鸽子id映射表',
   });
   illnessPigeon.associate = function() {
-    app.model.IllnessPigeon.belongsTo(app.model.PigeonManage, {
+    app.model.PigeonManage.belongsToMany(app.model.IllnessManage, {
+      through: illnessPigeon,
+      as: 'illnesses',
       foreignKey: 'pigeon_id',
-      onDelete: 'NO ACTION',
-      onUpdate: 'NO ACTION',
+      constraints: false,
     });
-    app.model.IllnessPigeon.belongsTo(app.model.IllnessManage, {
+    app.model.IllnessManage.belongsToMany(app.model.PigeonManage, {
+      through: illnessPigeon,
+      as: 'pigeons',
       foreignKey: 'illness_id',
-      onDelete: 'NO ACTION',
-      onUpdate: 'NO ACTION',
+      constraints: false,
     });
   };
   return illnessPigeon;

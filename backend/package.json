@@ -16,6 +16,7 @@
     "egg-validate": "^2.0.2",
     "lodash": "^4.17.21",
     "mockjs": "^1.1.0",
+    "moment": "^2.29.4",
     "mysql2": "^2.3.3",
     "typescript": "4"
   },
@@ -40,7 +41,7 @@
     "cov": "egg-bin cov",
     "lint": "eslint .",
     "ci": "npm run lint && npm run cov",
-    "rebuild-db": "npx sequelize db:migrate:undo:all && npx sequelize db:migrate"
+    "delete-db": "npx sequelize db:migrate:undo:all"
   },
   "ci": {
     "version": "16, 18",

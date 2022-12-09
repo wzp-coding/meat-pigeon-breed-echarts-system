@@ -24,4 +24,8 @@ module.exports = app => {
   router.resources('user', '/user', controller.user);
   router.post('/login', controller.user.login);
   router.post('/user/check_account', controller.user.checkAccount);
+  // 疾病管理
+  router.resources('illness_manage', '/illnessManage', controller.illnessManage);
+  // 肉鸽管理
+  router.resources('pigeon_manage', '/pigeonManage', controller.pigeonManage);
 };
