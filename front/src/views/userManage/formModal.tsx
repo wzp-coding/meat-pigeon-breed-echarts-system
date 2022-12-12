@@ -35,6 +35,7 @@ const _Modal: React.FC<Props> = function ({
 }) {
   const [form] = Form.useForm();
   const [state, setState] = useKeepState(initialState);
+  // const removeFns = useRef<Function[]>([]);
 
   async function handleSubmitForm() {
     try {
@@ -175,8 +176,9 @@ const _Modal: React.FC<Props> = function ({
           initialValue={rowData ? [rowData.avatar] : []}
         >
           <TencentOssUpload
-            values={rowData ? [rowData.avatar] : []}
+            values={rowData?.avatar ? [rowData.avatar] : []}
             onChange={values => setState({ avatar: values })}
+            // removeFns={removeFns}
           />
         </Form.Item>
       </Form>

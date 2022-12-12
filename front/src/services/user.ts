@@ -31,8 +31,8 @@ export function serviceGetUserById(id: string) {
 }
 
 // 获取用户列表
-export function serviceGetUserList(params: CommonType.Pagination) {
-  return http.get('/user', { params })
+export function serviceGetUserList(params: CommonType.Pagination, headers: {}) {
+  return http.get('/user', { params, headers })
 }
 
 // 删除用户信息

@@ -12,7 +12,7 @@
 
 import React, { FC, useEffect } from 'react';
 import './style.scss';
-import { Table } from 'antd';
+import { message, Table } from 'antd';
 import type { TableProps } from 'antd';
 import { AxiosPromise } from 'axios';
 import useKeepState from 'use-keep-state';
@@ -20,7 +20,7 @@ import Toolbar from './Toolbar';
 import useDebounceFn from '@/hooks/useDebounceFn';
 
 interface Props extends TableProps<any> {
-  getTableData: (data: any) => Promise<Record<string, any>>;
+  getTableData: (data: any, headers?: any) => Promise<Record<string, any>>;
   onTableChange?: (pagination: any, filters: any, sorter: any) => void;
   onDelete?: (id: string) => AxiosPromise;
   onAdd?: () => void;
@@ -73,22 +73,26 @@ const TableFC: FC<Props> = ({
   const [state, setState] = useKeepState(initialState);
 
   const { run: getData } = useDebounceFn(
-    () => {
+    (headers = {}) => {
       setState({ isLoading: true });
       const { page, pageSize } = tableRef.current;
       // 调用父组件函数获取数据
       getTableData({
         page,
         pageSize,
-      })
+      }, headers)
         .then(res => {
+          if(res.code === -1) {
+            message.error(res.msg);
+            return;
+          }
           setState({
             pagination: {
               ...state.pagination,
-              total: res.count,
+              total: res.data.count,
               pageSize,
             },
-            tableDataSource: res.rows,
+            tableDataSource: res.data.rows,
           });
         })
         .finally(() => {

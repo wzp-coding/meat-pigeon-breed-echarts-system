@@ -1,47 +1,50 @@
 /**
  * 活动清单
  */
-import { useEffect, useRef } from 'react'
-import useKeepState from 'use-keep-state'
-import Table from '@/components/table'
-import FormModal from './formModal'
-import { serviceGetUserList, serviceDeleteUser } from '@/services'
-import { Button, Form, Popconfirm } from 'antd'
+import { useEffect, useRef } from 'react';
+import useKeepState from 'use-keep-state';
+import Table from '@/components/table';
+import FormModal from './formModal';
+import DetailModal from './detailModal';
+import { serviceGetUserList, serviceDeleteUser } from '@/services';
+import { Button, Form, Popconfirm } from 'antd';
 
 interface State {
-  showModal: boolean
-  currentRowData: Record<string, any> | null
+  showModal: boolean;
+  showDetailModal: boolean;
+  currentRowData: Record<string, any> | null;
 }
 
 const initState: State = {
   showModal: false,
-  currentRowData: null
-}
+  showDetailModal: false,
+  currentRowData: null,
+};
 
 const UserList = () => {
-  const [form] = Form.useForm()
-  const [state, setState] = useKeepState(initState)
-  const tableRef = useRef<any>()
+  const [form] = Form.useForm();
+  const [state, setState] = useKeepState(initState);
+  const tableRef = useRef<any>();
   const tableColumns = [
     {
       title: '账号',
       dataIndex: 'account',
-      width: 140
+      width: 140,
     },
     {
       title: '用户名',
       dataIndex: 'name',
-      width: 140
+      width: 140,
     },
     {
       title: '手机',
       dataIndex: 'phone',
-      width: 140
+      width: 140,
     },
     {
       title: '邮箱',
       dataIndex: 'email',
-      width: 140
+      width: 140,
     },
     {
       title: '操作',
@@ -49,6 +52,7 @@ const UserList = () => {
       fixed: 'right',
       render: (row: any) => (
         <>
+          <Button onClick={handleActionButton.bind(null, 2, row)}>详情</Button>
           <Button onClick={handleActionButton.bind(null, 0, row)}>编辑</Button>
           <Popconfirm
             title="您确定要删除吗？"
@@ -59,44 +63,51 @@ const UserList = () => {
             <Button danger>删除</Button>
           </Popconfirm>
         </>
-      )
-    }
-  ]
+      ),
+    },
+  ];
 
   function initParams() {
-    form.resetFields()
-    tableRef?.current?.getTableData()
+    form.resetFields();
+    tableRef?.current?.getTableData();
   }
 
   function toggleModal() {
-    setState({ showModal: !state.showModal })
+    setState({ showModal: !state.showModal });
   }
 
-  const handleSuccess = function() {
-    toggleModal()
-    tableRef.current.getTableData()
+  function toggleDetailModal() {
+    setState({ showDetailModal: !state.showDetailModal });
   }
+
+  const handleSuccess = function () {
+    toggleModal();
+    tableRef.current.getTableData({successAlert: false});
+  };
 
   function handleActionButton(buttonType: number, row: any) {
     switch (buttonType) {
       // 编辑
       case 0:
-        setState({ showModal: true, currentRowData: row })
-        break
+        setState({ showModal: true, currentRowData: row });
+        break;
       // 删除
       case 1:
-        serviceDeleteUser(row.id)
-        .then(res => {
-          tableRef.current.getTableData()
-        })
-        break
+        serviceDeleteUser(row.id).then(res => {
+          tableRef.current.getTableData({successAlert: false});
+        });
+        break;
+      // 详情
+      case 2:
+        setState({ showDetailModal: true, currentRowData: row });
+        break;
       default:
     }
   }
 
   useEffect(() => {
-    initParams()
-  }, [])
+    initParams();
+  }, []);
 
   return (
     <div className="today-task">
@@ -104,10 +115,12 @@ const UserList = () => {
         ref={tableRef}
         getTableData={serviceGetUserList}
         columns={tableColumns}
-        onAdd={() => setState({
-          showModal: true,
-          currentRowData: null
-        })}
+        onAdd={() =>
+          setState({
+            showModal: true,
+            currentRowData: null,
+          })
+        }
       />
 
       <FormModal
@@ -116,8 +129,13 @@ const UserList = () => {
         onCancel={toggleModal}
         rowData={state.currentRowData}
       />
+      <DetailModal
+        visible={state.showDetailModal}
+        onCancel={toggleDetailModal}
+        rowData={state.currentRowData}
+      />
     </div>
-  )
-}
+  );
+};
 
-export default UserList
+export default UserList;

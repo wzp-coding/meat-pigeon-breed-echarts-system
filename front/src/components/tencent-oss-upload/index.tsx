@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { MutableRefObject, useRef, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
-import type { UploadProps } from 'antd';
+import { Modal, UploadProps } from 'antd';
 import { Upload } from 'antd';
 import type { UploadFile } from 'antd/es/upload/interface';
 import COS from 'cos-js-sdk-v5';
 import { uniqueId } from 'lodash';
+import { getBase64 } from '@/utils';
 const Bucket = 'blog-images-1302031947'; /* 存储桶 */
 const Region = 'ap-guangzhou'; /* 存储桶所在地域，必须字段 */
 const cos = new COS({
@@ -16,12 +17,17 @@ interface Props {
   values?: string[];
   onChange?: (values: string[]) => void;
   max?: number;
+  uploadProps?: Partial<UploadProps>;
+  // removeFns?: MutableRefObject<Function[]>;
 }
 const TencentOssUpload: React.FC<Props> = ({
   values = [],
   onChange = () => {},
   max = 1,
+  uploadProps = {},
+  // removeFns = useRef<Function[]>([]),
 }) => {
+  console.log('values: ', values);
   const [fileList, setFileList] = useState<UploadFile[]>(
     values.map(url => ({
       url,
@@ -65,35 +71,68 @@ const TencentOssUpload: React.FC<Props> = ({
       },
     });
   };
+  /** 算了，不删除oss上的图片，不然有点麻烦 */
   const handleRemove: UploadProps['onRemove'] = file => {
-    cos
-      .deleteObject({
-        Bucket,
-        Region,
-        Key: 'images/' + file.name,
-      })
-      .then(res => {
-        console.log('删除成功');
-      })
-      .catch(err => {
-        console.log('删除成功', err);
-      });
+    // removeFns.current.push(() =>
+    //   cos
+    //     .deleteObject({
+    //       Bucket,
+    //       Region,
+    //       Key: 'images/' + file.name,
+    //     })
+    //     .then(res => {
+    //       console.log('删除成功');
+    //     })
+    //     .catch(err => {
+    //       console.log('删除成功', err);
+    //     })
+    // );
   };
+
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState('');
+  const [previewTitle, setPreviewTitle] = useState('');
+
+  const handlePreview = async (file: UploadFile) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj!);
+    }
+
+    setPreviewImage(file.url || (file.preview as string));
+    setPreviewOpen(true);
+    setPreviewTitle(
+      file.name || file.url!.substring(file.url!.lastIndexOf('/') + 1)
+    );
+  };
+  const handleCancel = () => setPreviewOpen(false);
+
   return (
-    <Upload
-      listType="picture-card"
-      onChange={handleChange}
-      onRemove={handleRemove}
-      customRequest={handleRequest}
-      fileList={fileList}
-    >
-      {fileList.length >= max ? null : (
-        <div>
-          <PlusOutlined />
-          <div style={{ marginTop: 8 }}>上传图片</div>
-        </div>
-      )}
-    </Upload>
+    <>
+      <Upload
+        listType="picture-card"
+        onChange={handleChange}
+        onRemove={handleRemove}
+        customRequest={handleRequest}
+        fileList={fileList}
+        onPreview={handlePreview}
+        {...uploadProps}
+      >
+        {fileList.length >= max ? null : (
+          <div>
+            <PlusOutlined />
+            <div style={{ marginTop: 8 }}>上传图片</div>
+          </div>
+        )}
+      </Upload>
+      <Modal
+        visible={previewOpen}
+        title={previewTitle}
+        footer={null}
+        onCancel={handleCancel}
+      >
+        <img alt="avatar" style={{ width: '100%' }} src={previewImage} />
+      </Modal>
+    </>
   );
 };
 
