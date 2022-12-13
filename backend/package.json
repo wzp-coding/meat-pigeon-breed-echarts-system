@@ -41,7 +41,8 @@
     "cov": "egg-bin cov",
     "lint": "eslint .",
     "ci": "npm run lint && npm run cov",
-    "delete-db": "npx sequelize db:migrate:undo:all"
+    "delete-db": "npx sequelize db:migrate:undo:all",
+    "fix": "eslint --fix ./app"
   },
   "ci": {
     "version": "16, 18",

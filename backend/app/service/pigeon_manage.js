@@ -1,18 +1,22 @@
 const { toInteger } = require('lodash');
 const Service = require('egg').Service;
+const { Op } = require('sequelize');
 
 class pigeonManageService extends Service {
   async findAllPigeons() {
     const ctx = this.ctx;
     try {
-      let { page, pageSize } = ctx.query;
+      let { page, pageSize, keywords } = ctx.query;
       page = toInteger(page);
       pageSize = toInteger(pageSize);
-      const rows = await ctx.model.PigeonManage.findAll({
+      const data = await ctx.model.PigeonManage.findAndCountAll({
+        limit: pageSize,
+        offset: pageSize * (page - 1),
         include: [
           {
             model: ctx.model.PigeonCategoryManage,
             as: 'categoryInfo',
+            required: true,
           },
           {
             model: ctx.model.IllnessManage,
@@ -35,11 +39,25 @@ class pigeonManageService extends Service {
             ],
           ],
         },
-        limit: pageSize,
-        offset: pageSize * (page - 1),
+        where: {
+          [Op.or]: {
+            pigeonId: {
+              [Op.like]: '%' + keywords + '%',
+            },
+            houseId: {
+              [Op.like]: '%' + keywords + '%',
+            },
+            '$categoryInfo.category$': {
+              [Op.like]: '%' + keywords + '%',
+            },
+            '$categoryInfo.feature$': {
+              [Op.like]: '%' + keywords + '%',
+            },
+          },
+        },
+        distinct: true,
       });
-      const count = await ctx.model.PigeonManage.count();
-      return { rows, count };
+      return data;
     } catch (error) {
       ctx.logger.error(error);
     }

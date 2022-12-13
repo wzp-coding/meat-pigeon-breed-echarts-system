@@ -1,5 +1,6 @@
 
 exports.init = async app => {
+  app;
   // await app.model.FeedManage.bulkCreate(require('./feed_manage'));
   // await app.model.PigeonCategoryManage.bulkCreate(require('./pigeon_category_manage'));
   // await app.model.User.bulkCreate(require('./user'));

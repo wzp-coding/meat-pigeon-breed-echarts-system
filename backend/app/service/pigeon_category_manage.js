@@ -1,16 +1,27 @@
 const { toInteger } = require('lodash');
 const Service = require('egg').Service;
+const { Op } = require('sequelize');
 
 class pigeonCategoryManageService extends Service {
   async findAllPigeonCategory() {
     const ctx = this.ctx;
     try {
-      let { page, pageSize } = ctx.query;
+      let { page, pageSize, keywords } = ctx.query;
       page = toInteger(page);
       pageSize = toInteger(pageSize);
       const query = {
         limit: pageSize,
         offset: pageSize * (page - 1),
+        where: {
+          [Op.or]: {
+            category: {
+              [Op.like]: '%' + keywords + '%',
+            },
+            feature: {
+              [Op.like]: '%' + keywords + '%',
+            },
+          },
+        },
       };
       const data = await ctx.model.PigeonCategoryManage.findAndCountAll(query);
       return data;

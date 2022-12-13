@@ -6,19 +6,31 @@ class UserService extends Service {
   async findAllUser() {
     const ctx = this.ctx;
     try {
-      let { page, pageSize } = ctx.query;
+      let { page, pageSize, keywords } = ctx.query;
       page = toInteger(page);
       pageSize = toInteger(pageSize);
       const query = {
         limit: pageSize,
         offset: pageSize * (page - 1),
-      };
-      const data = await ctx.model.User.findAndCountAll({
-        ...query,
         where: {
           role: 1,
+          [Op.or]: {
+            account: {
+              [Op.like]: '%' + keywords + '%',
+            },
+            name: {
+              [Op.like]: '%' + keywords + '%',
+            },
+            phone: {
+              [Op.like]: '%' + keywords + '%',
+            },
+            email: {
+              [Op.like]: '%' + keywords + '%',
+            },
+          },
         },
-      });
+      };
+      const data = await ctx.model.User.findAndCountAll(query);
       return data;
     } catch (error) {
       ctx.logger.error(error);
