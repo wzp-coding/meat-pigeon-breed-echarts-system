@@ -1,12 +1,15 @@
 const { toInteger } = require('lodash');
 const Service = require('egg').Service;
 const { Op } = require('sequelize');
+const { geneRangeWhere } = require('../utils');
 
 class pigeonManageService extends Service {
   async findAllPigeons() {
     const ctx = this.ctx;
     try {
-      let { page, pageSize, keywords } = ctx.query;
+      let { page, pageSize, keywords = '' } = ctx.query;
+      const { startFeedTime = [], feedDays = [] } = ctx.request.body;
+      console.log('feedDays: ', feedDays);
       page = toInteger(page);
       pageSize = toInteger(pageSize);
       const data = await ctx.model.PigeonManage.findAndCountAll({
@@ -28,16 +31,6 @@ class pigeonManageService extends Service {
         ],
         attributes: {
           exclude: [ 'category_id' ],
-          include: [
-            [
-              ctx.model.fn(
-                'DATEDIFF',
-                ctx.model.fn('CURRENT_DATE'),
-                ctx.model.col('start_feed_time')
-              ),
-              'feedDays',
-            ],
-          ],
         },
         where: {
           [Op.or]: {
@@ -54,6 +47,8 @@ class pigeonManageService extends Service {
               [Op.like]: '%' + keywords + '%',
             },
           },
+          ...geneRangeWhere(startFeedTime, 'startFeedTime'),
+          ...geneRangeWhere(feedDays, 'feedDays'),
         },
         distinct: true,
       });
@@ -85,14 +80,6 @@ class pigeonManageService extends Service {
       attributes: {
         exclude: [ 'category_id' ],
         include: [
-          [
-            ctx.model.fn(
-              'DATEDIFF',
-              ctx.model.fn('CURRENT_DATE'),
-              ctx.model.col('start_feed_time')
-            ),
-            'feedDays',
-          ],
           [ ctx.model.col('pigeon_category_manage.category'), 'category' ],
           [ ctx.model.col('pigeon_category_manage.year_eggs'), 'yearEggs' ],
           [ ctx.model.col('pigeon_category_manage.adult_weight'), 'adultWeight' ],

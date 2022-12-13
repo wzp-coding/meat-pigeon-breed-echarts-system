@@ -6,7 +6,7 @@ class illnessManageService extends Service {
   async findAllIllness() {
     const ctx = this.ctx;
     try {
-      let { page, pageSize, keywords } = ctx.query;
+      let { page, pageSize, keywords = '' } = ctx.query;
       page = toInteger(page);
       pageSize = toInteger(pageSize);
       const query = {

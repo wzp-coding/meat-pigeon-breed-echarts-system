@@ -1,5 +1,6 @@
 const CryptoJS = require('crypto-js');
 const { SECRET_KEYS } = require('../const/index');
+const { Op } = require('sequelize');
 
 const encrypto = str => CryptoJS.AES.encrypt(str, SECRET_KEYS).toString();
 const decrypto = str =>
@@ -19,8 +20,22 @@ const randomDate = (year, month) => {
     .format('YYYY-MM-DD');
 };
 
+
+const geneRangeWhere = (arr = [], name) => {
+  if (!arr.length || arr.length !== 2) {
+    return {};
+  }
+  return {
+    [name]: {
+      [Op.gte]: arr[0],
+      [Op.lte]: arr[1],
+    },
+  };
+};
+
 module.exports = {
   encrypto,
   decrypto,
   randomDate,
+  geneRangeWhere,
 };

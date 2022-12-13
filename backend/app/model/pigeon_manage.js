@@ -1,7 +1,7 @@
 'use strict';
 const { snakeCase } = require('lodash');
 module.exports = app => {
-  const { INTEGER, STRING, DATEONLY } = app.Sequelize;
+  const { INTEGER, STRING, DATEONLY, DataTypes } = app.Sequelize;
   const schema = {
     id: {
       type: INTEGER,
@@ -30,6 +30,17 @@ module.exports = app => {
       type: DATEONLY,
       allowNull: false,
       comment: '开始饲养时间',
+    },
+    feedDays: {
+      type: INTEGER,
+      allowNull: false,
+      comment: '饲养天数',
+    },
+    isFinished: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true,
+      comment: '是否完成饲养',
+      defaultValue: false,
     },
     feedCount: {
       type: INTEGER,

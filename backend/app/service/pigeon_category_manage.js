@@ -6,7 +6,7 @@ class pigeonCategoryManageService extends Service {
   async findAllPigeonCategory() {
     const ctx = this.ctx;
     try {
-      let { page, pageSize, keywords } = ctx.query;
+      let { page, pageSize, keywords = '' } = ctx.query;
       page = toInteger(page);
       pageSize = toInteger(pageSize);
       const query = {
