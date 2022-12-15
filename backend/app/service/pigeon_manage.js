@@ -7,8 +7,8 @@ class pigeonManageService extends Service {
   async findAllPigeons() {
     const ctx = this.ctx;
     try {
-      let { page, pageSize, keywords = '' } = ctx.query;
-      const { startFeedTime = [], feedDays = [] } = ctx.request.body;
+      let { page, pageSize } = ctx.request.body;
+      const { startFeedTime = [], feedDays = [], keywords = '' } = ctx.request.body;
       page = toInteger(page);
       pageSize = toInteger(pageSize);
       const data = await ctx.model.PigeonManage.findAndCountAll({

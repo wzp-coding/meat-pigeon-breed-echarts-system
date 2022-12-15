@@ -15,8 +15,9 @@ class IllnessManageController extends Controller {
       {
         page: 'int',
         pageSize: 'int',
+        keywords: 'string?',
       },
-      ctx.query
+      ctx.request.body
     );
     const data = await ctx.service.illnessManage.findAllIllness();
     if (!data) {

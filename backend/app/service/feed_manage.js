@@ -6,8 +6,9 @@ class FeedManageService extends Service {
   async findAllFeeds() {
     const ctx = this.ctx;
     try {
-      let { page, pageSize, keywords = '' } = ctx.query;
+      let { page, pageSize } = ctx.request.body;
       const {
+        keywords = '',
         purchaseTime = [],
         produceTime = [],
         purchaseAmount = [],

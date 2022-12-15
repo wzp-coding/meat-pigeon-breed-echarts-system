@@ -6,6 +6,7 @@ const path = require('path');
  */
 module.exports = app => {
   const { router, controller } = app;
+
   // 加载所有的校验规则
   const directory = path.join(app.config.baseDir, 'app/validate');
   app.loader.loadToApp(directory, 'validate');
@@ -13,19 +14,41 @@ module.exports = app => {
   // 饲料管理
   router.post('/feedManage/feed/:id', controller.feedManage.feed);
   router.get('/feedManage/amount', controller.feedManage.amountGroupByCategory);
-  router.resources('feed_manage', '/feedManage', controller.feedManage);
+
+  router.post('/feedManage/create', controller.feedManage.create);
+  router.delete('/feedManage/:id', controller.feedManage.destroy);
+  router.put('/feedManage/:id', controller.feedManage.update);
+  router.post('/feedManage', controller.feedManage.index);
+  router.get('/feedManage/:id', controller.feedManage.show);
+
   // 肉鸽种类管理
-  router.resources(
-    'pigeon_category_manage',
-    '/pigeonCategoryManage',
-    controller.pigeonCategoryManage
-  );
+  router.post('/pigeonCategoryManage/create', controller.pigeonCategoryManage.create);
+  router.delete('/pigeonCategoryManage/:id', controller.pigeonCategoryManage.destroy);
+  router.put('/pigeonCategoryManage/:id', controller.pigeonCategoryManage.update);
+  router.post('/pigeonCategoryManage', controller.pigeonCategoryManage.index);
+  router.get('/pigeonCategoryManage/:id', controller.pigeonCategoryManage.show);
+
   // 用户管理
-  router.resources('user', '/user', controller.user);
   router.post('/login', controller.user.login);
-  router.post('/user/check_account', controller.user.checkAccount);
+  router.post('/user/checkAccount', controller.user.checkAccount);
+
+  router.post('/user/create', controller.user.create);
+  router.delete('/user/:id', controller.user.destroy);
+  router.put('/user/:id', controller.user.update);
+  router.post('/user', controller.user.index);
+  router.get('/user/:id', controller.user.show);
+
   // 疾病管理
-  router.resources('illness_manage', '/illnessManage', controller.illnessManage);
+  router.post('/illnessManage/create', controller.illnessManage.create);
+  router.delete('/illnessManage/:id', controller.illnessManage.destroy);
+  router.put('/illnessManage/:id', controller.illnessManage.update);
+  router.post('/illnessManage', controller.illnessManage.index);
+  router.get('/illnessManage/:id', controller.illnessManage.show);
+
   // 肉鸽管理
-  router.resources('pigeon_manage', '/pigeonManage', controller.pigeonManage);
+  router.post('/pigeonManage/create', controller.pigeonManage.create);
+  router.delete('/pigeonManage/:id', controller.pigeonManage.destroy);
+  router.put('/pigeonManage/:id', controller.pigeonManage.update);
+  router.post('/pigeonManage', controller.pigeonManage.index);
+  router.get('/pigeonManage/:id', controller.pigeonManage.show);
 };

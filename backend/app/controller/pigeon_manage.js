@@ -20,8 +20,11 @@ class PigeonManageController extends Controller {
       {
         page: 'int',
         pageSize: 'int',
+        keywords: 'string?',
+        startFeedTime: 'array?',
+        feedDays: 'array?',
       },
-      ctx.query
+      ctx.request.body
     );
     const data = await ctx.service.pigeonManage.findAllPigeons();
     if (!data) {

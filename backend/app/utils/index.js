@@ -22,7 +22,7 @@ const randomDate = (year, month) => {
 
 
 const geneRangeWhere = (arr = [], name) => {
-  if (!arr.length || arr.length !== 2) {
+  if (!arr.length || arr.length !== 2 || !arr[0] || !arr[1]) {
     return {};
   }
   return {

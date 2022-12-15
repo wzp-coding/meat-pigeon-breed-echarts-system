@@ -16,8 +16,9 @@ class PigeonCategoryManageController extends Controller {
       {
         page: 'int',
         pageSize: 'int',
+        keywords: 'string?',
       },
-      ctx.query
+      ctx.request.body
     );
     const data = await ctx.service.pigeonCategoryManage.findAllPigeonCategory();
     if (!data) {

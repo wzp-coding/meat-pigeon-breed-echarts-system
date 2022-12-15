@@ -6,10 +6,10 @@ class UserService extends Service {
   async findAllUser() {
     const ctx = this.ctx;
     try {
-      let { page, pageSize, keywords = '' } = ctx.query;
+      let { page, pageSize, keywords = '' } = ctx.request.body;
       page = toInteger(page);
       pageSize = toInteger(pageSize);
-      const query = {
+      const condition = {
         limit: pageSize,
         offset: pageSize * (page - 1),
         where: {
@@ -30,7 +30,7 @@ class UserService extends Service {
           },
         },
       };
-      const data = await ctx.model.User.findAndCountAll(query);
+      const data = await ctx.model.User.findAndCountAll(condition);
       return data;
     } catch (error) {
       ctx.logger.error(error);

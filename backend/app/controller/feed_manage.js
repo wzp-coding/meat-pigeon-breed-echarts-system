@@ -18,8 +18,14 @@ class FeedManageController extends Controller {
       {
         page: 'int',
         pageSize: 'int',
+        keywords: 'string?',
+        purchaseTime: 'array?',
+        purchaseAmount: 'array?',
+        currentAmount: 'array?',
+        produceTime: 'array?',
+        shelfLife: 'array?',
       },
-      ctx.query
+      ctx.request.body
     );
     const data = await ctx.service.feedManage.findAllFeeds();
     if (!data) {

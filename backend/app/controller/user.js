@@ -20,8 +20,9 @@ class UserController extends Controller {
       {
         page: 'int',
         pageSize: 'int',
+        keywords: 'string?',
       },
-      ctx.query
+      ctx.request.body
     );
     const data = await ctx.service.user.findAllUser();
     if (!data) {
@@ -34,6 +35,7 @@ class UserController extends Controller {
 
   async show() {
     const ctx = this.ctx;
+    console.log('ctx.params: ', ctx.params);
     ctx.validate({ id: 'int' }, ctx.params);
     const data = await ctx.model.User.findByPk(ctx.params.id);
     if (!data) {
@@ -88,6 +90,7 @@ class UserController extends Controller {
   // 校验账号是否重复
   async checkAccount() {
     const ctx = this.ctx;
+    console.log('ctx.request.body: ', ctx.request.body);
     ctx.validate({ account: 'string' }, ctx.request.body);
     const { account } = ctx.request.body;
     const data = await ctx.model.User.findOne({

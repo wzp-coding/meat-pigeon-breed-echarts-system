@@ -5,7 +5,6 @@ module.exports = class App {
 
   async willReady() {
     const app = this.app;
-
     // 同步数据库
     await app.model
       .sync({
