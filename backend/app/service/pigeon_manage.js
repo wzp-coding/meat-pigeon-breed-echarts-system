@@ -9,7 +9,6 @@ class pigeonManageService extends Service {
     try {
       let { page, pageSize, keywords = '' } = ctx.query;
       const { startFeedTime = [], feedDays = [] } = ctx.request.body;
-      console.log('feedDays: ', feedDays);
       page = toInteger(page);
       pageSize = toInteger(pageSize);
       const data = await ctx.model.PigeonManage.findAndCountAll({

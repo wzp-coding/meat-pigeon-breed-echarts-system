@@ -15,7 +15,7 @@ module.exports = new Array(100).fill(0).map((_, i) => {
     eggs: Random.integer(0, 20),
     'health|1': [ '健康', '亚健康' ],
     feedDays,
+    'isFinished|1': [ true, false ],
   });
 });
 
-console.log('module.exports: ', module.exports);
