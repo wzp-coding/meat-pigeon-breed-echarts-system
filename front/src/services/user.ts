@@ -7,12 +7,12 @@ export function serviceLogin(data: LoginType.Req) {
 
 // 创建用户信息
 export function serviceCreateUser(data: UserType.CreateReq) {
-  return http.post('/user', data)
+  return http.post('/user/create', data)
 }
 
 // 检查用户名重复
 export function serviceCheckAccount(data: { account: string }) {
-  return http.post('/user/check_account', data, {
+  return http.post('/user/checkAccount', data, {
     headers: {
       successAlert: false,
       errorAlert: false
@@ -31,8 +31,8 @@ export function serviceGetUserById(id: string) {
 }
 
 // 获取用户列表
-export function serviceGetUserList(params: CommonType.Pagination, headers: {}) {
-  return http.get('/user', { params, headers })
+export function serviceGetUserList(data: CommonType.Conditions, headers: CommonType.Headers = {} ) {
+  return http.post('/user', data, { headers })
 }
 
 // 删除用户信息

@@ -73,16 +73,21 @@ const TableFC: FC<Props> = ({
   const [state, setState] = useKeepState(initialState);
 
   const { run: getData } = useDebounceFn(
-    (headers = {}) => {
+    (data = {}, headers = {}) => {
       setState({ isLoading: true });
       const { page, pageSize } = tableRef.current;
       // 调用父组件函数获取数据
-      getTableData({
-        page,
-        pageSize,
-      }, headers)
+      getTableData(
+        {
+          page,
+          pageSize,
+          ...data,
+        },
+        
+        headers,
+      )
         .then(res => {
-          if(res.code === -1) {
+          if (res.code === -1) {
             message.error(res.msg);
             return;
           }
@@ -138,7 +143,9 @@ const TableFC: FC<Props> = ({
     setTimeout(() => {
       const tableEl = document.querySelector('.ant-table-wrapper');
       if (tableEl) {
-        setState({ tableHeight: parseInt(getComputedStyle(tableEl).height) - 120 });
+        setState({
+          tableHeight: parseInt(getComputedStyle(tableEl).height) - 120,
+        });
       }
     }, 500);
   }, []);

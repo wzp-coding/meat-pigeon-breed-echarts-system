@@ -1,13 +1,14 @@
 /**
  * 活动清单
  */
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import useKeepState from 'use-keep-state';
 import Table from '@/components/table';
 import FormModal from './formModal';
 import DetailModal from './detailModal';
 import { serviceGetUserList, serviceDeleteUser } from '@/services';
 import { Button, Form, Popconfirm } from 'antd';
+import Search from 'antd/lib/input/Search';
 
 interface State {
   showModal: boolean;
@@ -25,6 +26,8 @@ const UserList = () => {
   const [form] = Form.useForm();
   const [state, setState] = useKeepState(initState);
   const tableRef = useRef<any>();
+  const [keywords, setKeywords] = useState('');
+
   const tableColumns = [
     {
       title: '账号',
@@ -67,25 +70,25 @@ const UserList = () => {
     },
   ];
 
-  function initParams() {
+  const initParams = () => {
     form.resetFields();
     tableRef?.current?.getTableData();
-  }
-
-  function toggleModal() {
-    setState({ showModal: !state.showModal });
-  }
-
-  function toggleDetailModal() {
-    setState({ showDetailModal: !state.showDetailModal });
-  }
-
-  const handleSuccess = function () {
-    toggleModal();
-    tableRef.current.getTableData({successAlert: false});
   };
 
-  function handleActionButton(buttonType: number, row: any) {
+  const toggleModal = () => {
+    setState({ showModal: !state.showModal });
+  };
+
+  const toggleDetailModal = () => {
+    setState({ showDetailModal: !state.showDetailModal });
+  };
+
+  const handleSuccess = () => {
+    toggleModal();
+    tableRef.current.getTableData({ keywords }, { successAlert: false });
+  };
+
+  const handleActionButton = (buttonType: number, row: any) => {
     switch (buttonType) {
       // 编辑
       case 0:
@@ -94,7 +97,7 @@ const UserList = () => {
       // 删除
       case 1:
         serviceDeleteUser(row.id).then(res => {
-          tableRef.current.getTableData({successAlert: false});
+          tableRef.current.getTableData({ keywords }, { successAlert: false });
         });
         break;
       // 详情
@@ -103,7 +106,12 @@ const UserList = () => {
         break;
       default:
     }
-  }
+  };
+
+  const onSearch = (keywords: string) => {
+    setKeywords(keywords);
+    tableRef.current.getTableData({ keywords });
+  };
 
   useEffect(() => {
     initParams();
@@ -120,6 +128,15 @@ const UserList = () => {
             showModal: true,
             currentRowData: null,
           })
+        }
+        toolbar={
+          <Search
+            style={{ width: 400 }}
+            placeholder="请输入账号/用户名/手机/邮箱"
+            onSearch={onSearch}
+            enterButton
+            allowClear
+          />
         }
       />
 

@@ -37,7 +37,7 @@ const _Modal: React.FC<Props> = function ({
   const [state, setState] = useKeepState(initialState);
   // const removeFns = useRef<Function[]>([]);
 
-  async function handleSubmitForm() {
+  const handleSubmitForm = async () => {
     try {
       setState({ confirmLoading: true });
       const values = await form.validateFields();
