@@ -5,6 +5,7 @@ import Login from '@/views/login/index';
 import Layout from '@/views/layout/index';
 import Index from '@/views/index/index';
 import UserManage from '@/views/userManage/index';
+import IllnessManage from '@/views/illnessManage/index';
 import { MenuName } from '@/constants';
 
 export function MainRoutes() {
@@ -38,6 +39,18 @@ export function MainRoutes() {
               meta={{
                 requiresAuth: true,
                 title: MenuName.数据大屏,
+              }}
+            />
+          ),
+        },
+        {
+          path: 'disease',
+          element: (
+            <PrivateRoute
+              element={IllnessManage}
+              meta={{
+                requiresAuth: true,
+                title: MenuName.疾病防治,
               }}
             />
           ),

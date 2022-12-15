@@ -3,6 +3,7 @@ import {
   BugOutlined,
   UserOutlined,
   ApartmentOutlined,
+  BankOutlined,
 } from '@ant-design/icons';
 export const MenuName = {
   数据大屏: '数据大屏',
@@ -50,7 +51,7 @@ export const HOME_SIDER_MENU_LIST = [
   },
   {
     path: '/home/user',
-    icon: <UserOutlined />,
+    icon: <BankOutlined />,
     name: MenuName.个人中心,
     children: [
       {
