@@ -3,7 +3,7 @@ import useKeepState from 'use-keep-state';
 import Table from '@/components/table';
 import FormModal from './formModal';
 import DetailModal from './detailModal';
-import { serviceGetIllnessList, serviceDeleteIllness } from '@/services';
+import { serviceGetPigeonCategoryList, serviceDeletePigeonCategory } from '@/services';
 import { Button, Form, Popconfirm } from 'antd';
 import Search from 'antd/lib/input/Search';
 
@@ -19,7 +19,7 @@ const initState: State = {
   currentRowData: null,
 };
 
-const IllnessList = () => {
+const PigeonCategoryList = () => {
   const [form] = Form.useForm();
   const [state, setState] = useKeepState(initState);
   const tableRef = useRef<any>();
@@ -27,19 +27,28 @@ const IllnessList = () => {
 
   const tableColumns = [
     {
-      title: '疾病名称',
-      dataIndex: 'name',
-      width: 50,
+      title: '种类',
+      dataIndex: 'category',
+      width: 80,
     },
     {
-      title: '症状描述',
-      dataIndex: 'description',
-      width: 140,
-      ellipsis: true,
+      title: '年产卵(个)',
+      dataIndex: 'yearEggs',
+      width: 80,
     },
     {
-      title: '治疗方法',
-      dataIndex: 'treatment',
+      title: '四周龄体重(g)',
+      dataIndex: 'fourAgeWeight',
+      width: 80,
+    },
+    {
+      title: '成年体重(g)',
+      dataIndex: 'adultWeight',
+      width: 80,
+    },
+    {
+      title: '特征',
+      dataIndex: 'feature',
       width: 140,
       ellipsis: true,
     },
@@ -90,7 +99,7 @@ const IllnessList = () => {
         break;
       // 删除
       case 1:
-        serviceDeleteIllness(row.id).then(res => {
+        serviceDeletePigeonCategory(row.id).then(res => {
           tableRef.current.getTableData({ keywords }, { successAlert: false });
         });
         break;
@@ -115,7 +124,7 @@ const IllnessList = () => {
     <div className="today-task">
       <Table
         ref={tableRef}
-        getTableData={serviceGetIllnessList}
+        getTableData={serviceGetPigeonCategoryList}
         columns={tableColumns}
         onAdd={() =>
           setState({
@@ -126,7 +135,7 @@ const IllnessList = () => {
         toolbar={
           <Search
             style={{ width: 400 }}
-            placeholder="请输入疾病名称/症状描述/治疗方法"
+            placeholder="请输入种类名/特征"
             onSearch={onSearch}
             enterButton
             allowClear
@@ -149,4 +158,4 @@ const IllnessList = () => {
   );
 };
 
-export default IllnessList;
+export default PigeonCategoryList;

@@ -1,6 +1,3 @@
-/**
- * 活动清单
- */
 import { useEffect, useRef, useState } from 'react';
 import useKeepState from 'use-keep-state';
 import Table from '@/components/table';

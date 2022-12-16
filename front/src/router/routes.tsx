@@ -6,6 +6,7 @@ import Layout from '@/views/layout/index';
 import Index from '@/views/index/index';
 import UserManage from '@/views/userManage/index';
 import IllnessManage from '@/views/illnessManage/index';
+import PigeonCategoryManage from '@/views/pigeonCategoryManage/index';
 import { MenuName } from '@/constants';
 
 export function MainRoutes() {
@@ -63,6 +64,18 @@ export function MainRoutes() {
               meta={{
                 requiresAuth: true,
                 title: MenuName.用户管理,
+              }}
+            />
+          ),
+        },
+        {
+          path: 'pigeonCategory',
+          element: (
+            <PrivateRoute
+              element={PigeonCategoryManage}
+              meta={{
+                requiresAuth: true,
+                title: MenuName.鸽类管理,
               }}
             />
           ),
