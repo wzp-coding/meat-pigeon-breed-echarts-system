@@ -1,5 +1,5 @@
 import React from 'react';
-import useKeepState from 'use-keep-state';
+import { useSetState } from 'ahooks';
 import {
   serviceCheckAccount,
   serviceCreateUser,
@@ -17,7 +17,7 @@ type Props = {
   onCancel: () => void;
 };
 
-const initialState = {
+const initialState: {avatar: string[], [key: string]: any} = {
   confirmLoading: false,
   account: '',
   name: '',
@@ -34,7 +34,7 @@ const _Modal: React.FC<Props> = function ({
   rowData,
 }) {
   const [form] = Form.useForm();
-  const [state, setState] = useKeepState(initialState);
+  const [state, setState] = useSetState(initialState);
   // const removeFns = useRef<Function[]>([]);
 
   const handleSubmitForm = async () => {

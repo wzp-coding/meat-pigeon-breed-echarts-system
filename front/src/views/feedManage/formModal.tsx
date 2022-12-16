@@ -1,10 +1,7 @@
 import React from 'react';
 import { useSetState } from 'ahooks';
-import {
-  serviceCreateIllness,
-  serviceUpdateIllness,
-} from '@/services';
-import { Modal, Form, Input } from 'antd';
+import { serviceCreateFeed, serviceUpdateFeed } from '@/services';
+import { Modal, Form, Input, DatePicker, InputNumber } from 'antd';
 import { trimInputValue, trimObjectValue } from '@/utils';
 import TencentOssUpload from '@/components/tencent-oss-upload';
 
@@ -15,12 +12,14 @@ type Props = {
   onCancel: () => void;
 };
 
-const initialState:{ pictures: string[], [key: string]: any} = {
+const initialState = {
   confirmLoading: false,
-  name: '',
-  description: '',
-  treatment: '',
-  pictures: [],
+  category: '',
+  purchaseTime: '',
+  purchaseAmount: 0,
+  currentAmount: 0,
+  produceTime: '',
+  shelfLife: 0,
 };
 
 const _Modal: React.FC<Props> = function ({
@@ -38,11 +37,11 @@ const _Modal: React.FC<Props> = function ({
       setState({ confirmLoading: true });
       const values = await form.validateFields();
       const params = trimObjectValue(values);
-      params.pictures = params?.pictures?.join(',') || ''
       console.log('params: ', params);
+      return;
       (!rowData
-        ? serviceCreateIllness(params)
-        : serviceUpdateIllness(rowData.id, params)
+        ? serviceCreateFeed(params)
+        : serviceUpdateFeed(rowData.id, params)
       )
         .then(() => {
           onSuccess();
@@ -55,7 +54,7 @@ const _Modal: React.FC<Props> = function ({
     } finally {
       setState({ confirmLoading: false });
     }
-  }
+  };
 
   return (
     <Modal
@@ -73,48 +72,35 @@ const _Modal: React.FC<Props> = function ({
         wrapperCol={{ span: 18 }}
       >
         <Form.Item
-          label="疾病名称"
-          name="name"
-          initialValue={rowData?.name}
+          label="饲料种类"
+          name="category"
+          initialValue={rowData?.category}
           rules={[
             {
               required: true,
               type: 'string',
-              message: '疾病名称长度在1～25字符之间',
+              message: '饲料种类名长度在1～25字符之间',
               min: 1,
               max: 25,
-            }
+            },
           ]}
           getValueFromEvent={trimInputValue}
         >
-          <Input placeholder="请输入疾病名称"/>
+          <Input placeholder="请输入饲料种类名" />
         </Form.Item>
         <Form.Item
-          label="症状描述"
-          name="description"
-          initialValue={rowData?.description}
-          getValueFromEvent={trimInputValue}
+          label="进货日期"
+          name="purchaseTime"
+          initialValue={rowData?.purchaseTime}
         >
-          <Input.TextArea placeholder="请输入症状描述" autoSize={{ minRows: 1, maxRows: 5 }}/>
+          <DatePicker />
         </Form.Item>
         <Form.Item
-          label="治疗方法"
-          name="treatment"
-          initialValue={rowData?.treatment}
-          getValueFromEvent={trimInputValue}
+          label="进货量"
+          name="purchaseAmount"
+          initialValue={rowData?.purchaseAmount}
         >
-          <Input.TextArea placeholder="请输入治疗方法" autoSize={{ minRows: 1, maxRows: 5 }}/>
-        </Form.Item>
-        <Form.Item
-          label="图片描述"
-          name="pictures"
-          initialValue={rowData?.pictures ? rowData.pictures.split(',') : []}
-        >
-          <TencentOssUpload
-            values={rowData?.pictures ? rowData.pictures.split(',') : []}
-            onChange={values => setState({ pictures: values })}
-            max={4}
-          />
+          <InputNumber min={0}  />
         </Form.Item>
       </Form>
     </Modal>
