@@ -32,21 +32,23 @@ const IllnessList = () => {
     {
       title: '疾病名称',
       dataIndex: 'name',
-      width: 80,
+      width: 50,
     },
     {
       title: '症状描述',
       dataIndex: 'description',
       width: 140,
+      ellipsis: true,
     },
     {
       title: '治疗方法',
       dataIndex: 'treatment',
       width: 140,
+      ellipsis: true,
     },
     {
       title: '操作',
-      width: 140,
+      width: 100,
       fixed: 'right',
       render: (row: any) => (
         <>

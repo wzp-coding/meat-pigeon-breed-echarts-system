@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Form } from 'antd';
+import { Modal, Form, Button } from 'antd';
 import TencentOssUpload from '@/components/tencent-oss-upload';
 
 type Props = {
@@ -10,7 +10,17 @@ type Props = {
 
 const _Modal: React.FC<Props> = function ({ visible, onCancel, rowData }) {
   return (
-    <Modal title={'详情'} visible={visible} onCancel={onCancel} destroyOnClose>
+    <Modal
+      title={'详情'}
+      visible={visible}
+      onCancel={onCancel}
+      destroyOnClose
+      footer={[
+        <Button key="back" onClick={onCancel}>
+          关闭
+        </Button>,
+      ]}
+    >
       <Form preserve={false} labelCol={{ span: 4 }} wrapperCol={{ span: 20 }}>
         {rowData?.name && (
           <Form.Item label="疾病名称" name="name">
