@@ -24,6 +24,8 @@ interface Props extends TableProps<any> {
   onTableChange?: (pagination: any, filters: any, sorter: any) => void;
   onDelete?: (id: string) => AxiosPromise;
   onAdd?: () => void;
+  onPaginationChange?: () => void;
+  onBatchDelete?: () => void;
   toolbar?: React.ReactChild;
   [key: string]: any;
 }
@@ -37,7 +39,7 @@ interface State {
   columns: any[];
 }
 
-const DEFAULT_PAGE_SIZE = 50;
+const DEFAULT_PAGE_SIZE = 10;
 
 const initialState: State = {
   tableHeight: 0,
@@ -48,7 +50,7 @@ const initialState: State = {
     pageSize: DEFAULT_PAGE_SIZE,
     showSizeChanger: true,
     total: 0,
-    pageSizeOptions: ['30', '50', '70', '100', '200'],
+    pageSizeOptions: ['10', '20', '30'],
   },
   selectedRowKeys: [],
   columns: [],
@@ -66,6 +68,8 @@ const TableFC: FC<Props> = ({
   forwardedRef: tableRef,
   columns,
   toolbar,
+  onPaginationChange,
+  onBatchDelete,
   ...props
 }) => {
   let rowSelection;
@@ -83,8 +87,8 @@ const TableFC: FC<Props> = ({
           pageSize,
           ...data,
         },
-        
-        headers,
+
+        headers
       )
         .then(res => {
           if (res.code === -1) {
@@ -120,9 +124,11 @@ const TableFC: FC<Props> = ({
     tableRef.current.page = page;
     tableRef.current.pageSize = pageSize;
     onTableChange?.(pagination, filters, sorter);
-    setTimeout(() => {
-      getData();
-    });
+    if (onPaginationChange) {
+      onPaginationChange();
+    } else {
+      setTimeout(() => getData());
+    }
   }
 
   useEffect(() => {
@@ -140,14 +146,25 @@ const TableFC: FC<Props> = ({
 
   useEffect(() => {
     // 设置表格的高度
-    setTimeout(() => {
-      const tableEl = document.querySelector('.ant-table-wrapper');
-      if (tableEl) {
-        setState({
-          tableHeight: parseInt(getComputedStyle(tableEl).height) - 120,
-        });
-      }
-    }, 500);
+    const tableEl = document.querySelector('.ant-table-wrapper')!;
+    const currentHeight = parseInt(getComputedStyle(tableEl).height) - 120;
+    setState({ tableHeight: currentHeight });
+    let timeout = 0;
+    const resizeOb = new ResizeObserver(() => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        const currentHeight = parseInt(getComputedStyle(tableEl).height) - 120;
+        if (state.tableHeight !== currentHeight) {
+          setState({
+            tableHeight: currentHeight,
+          });
+        }
+      }, 500);
+    });
+    resizeOb.observe(tableEl);
+    return () => {
+      resizeOb.disconnect();
+    };
   }, []);
 
   useEffect(() => {
@@ -170,7 +187,11 @@ const TableFC: FC<Props> = ({
     const selectedRowKeys = state.selectedRowKeys.join(',');
     onDelete(selectedRowKeys).then(() => {
       setState({ selectedRowKeys: [] });
-      getData();
+      if (onBatchDelete) {
+        onBatchDelete();
+      } else {
+        getData();
+      }
     });
   }
 

@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
-import useKeepState from 'use-keep-state';
+import { useSetState } from 'ahooks';
 import Table from '@/components/table';
 import FormModal from './formModal';
 import DetailModal from './detailModal';
-import { serviceGetIllnessList, serviceDeleteIllness } from '@/services';
+import { serviceGetFeedList, serviceDeleteFeed } from '@/services';
 import { Button, Form, Popconfirm } from 'antd';
 import Search from 'antd/lib/input/Search';
+import Condition from './condition';
+import { Conditions } from './const';
 
 interface State {
   showModal: boolean;
@@ -19,29 +21,48 @@ const initState: State = {
   currentRowData: null,
 };
 
-const IllnessList = () => {
+const FeedList = () => {
   const [form] = Form.useForm();
-  const [state, setState] = useKeepState(initState);
+  const [state, setState] = useSetState(initState);
   const tableRef = useRef<any>();
+  const conditionsRef = useRef<Conditions>({});
   const [keywords, setKeywords] = useState('');
 
   const tableColumns = [
     {
-      title: '疾病名称',
+      title: '名称',
       dataIndex: 'name',
-      width: 50,
+      width: 100,
     },
     {
-      title: '症状描述',
-      dataIndex: 'description',
-      width: 140,
-      ellipsis: true,
+      title: '种类',
+      dataIndex: 'category',
+      width: 100,
     },
     {
-      title: '治疗方法',
-      dataIndex: 'treatment',
-      width: 140,
-      ellipsis: true,
+      title: '进货日期',
+      dataIndex: 'purchaseTime',
+      width: 60,
+    },
+    {
+      title: '进货量(g)',
+      dataIndex: 'purchaseAmount',
+      width: 60,
+    },
+    {
+      title: '当前存量(g)',
+      dataIndex: 'currentAmount',
+      width: 60,
+    },
+    {
+      title: '生产日期',
+      dataIndex: 'produceTime',
+      width: 60,
+    },
+    {
+      title: '保质期(天)',
+      dataIndex: 'shelfLife',
+      width: 60,
     },
     {
       title: '操作',
@@ -79,7 +100,7 @@ const IllnessList = () => {
 
   const handleSuccess = () => {
     toggleModal();
-    tableRef.current.getTableData({ keywords }, { successAlert: false });
+    tableRef.current.getTableData({...conditionsRef.current, keywords}, { successAlert: false });
   };
 
   const handleActionButton = (buttonType: number, row: any) => {
@@ -90,8 +111,8 @@ const IllnessList = () => {
         break;
       // 删除
       case 1:
-        serviceDeleteIllness(row.id).then(res => {
-          tableRef.current.getTableData({ keywords }, { successAlert: false });
+        serviceDeleteFeed(row.id).then(res => {
+          tableRef.current.getTableData({...conditionsRef.current, keywords}, { successAlert: false });
         });
         break;
       // 详情
@@ -104,18 +125,31 @@ const IllnessList = () => {
 
   const onSearch = (keywords: string) => {
     setKeywords(keywords);
-    tableRef.current.getTableData({ keywords });
+    tableRef.current.getTableData({ keywords, ...conditionsRef.current });
   };
 
   useEffect(() => {
     initParams();
   }, []);
 
+  const onAdvanceSearch = (conditions: Conditions) => {
+    conditionsRef.current = conditions;
+    tableRef.current.getTableData({ keywords, ...conditionsRef.current });
+  }
+  const onAdvanceClear = (conditions: Conditions) => {
+    conditionsRef.current = conditions;
+    tableRef.current.getTableData({ keywords, ...conditionsRef.current });
+  }
+  const onPaginationChange = () => {
+    tableRef.current.getTableData({ keywords, ...conditionsRef.current });
+  }
+
   return (
     <div className="today-task">
+      <Condition onSearch={onAdvanceSearch} onClear={onAdvanceClear}/>
       <Table
         ref={tableRef}
-        getTableData={serviceGetIllnessList}
+        getTableData={serviceGetFeedList}
         columns={tableColumns}
         onAdd={() =>
           setState({
@@ -123,10 +157,11 @@ const IllnessList = () => {
             currentRowData: null,
           })
         }
+        onPaginationChange={onPaginationChange}
         toolbar={
           <Search
             style={{ width: 400 }}
-            placeholder="请输入疾病名称/症状描述/治疗方法"
+            placeholder="请输入饲料名称/饲料种类"
             onSearch={onSearch}
             enterButton
             allowClear
@@ -143,10 +178,10 @@ const IllnessList = () => {
       <DetailModal
         visible={state.showDetailModal}
         onCancel={toggleDetailModal}
-        rowData={state.currentRowData}
+        rowData={state.currentRowData!}
       />
     </div>
   );
 };
 
-export default IllnessList;
+export default FeedList;

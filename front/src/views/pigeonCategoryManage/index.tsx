@@ -120,12 +120,17 @@ const PigeonCategoryList = () => {
     initParams();
   }, []);
 
+  const onPaginationChange = () => {
+    tableRef.current.getTableData({ keywords });
+  }
+
   return (
     <div className="today-task">
       <Table
         ref={tableRef}
         getTableData={serviceGetPigeonCategoryList}
         columns={tableColumns}
+        onPaginationChange={onPaginationChange}
         onAdd={() =>
           setState({
             showModal: true,

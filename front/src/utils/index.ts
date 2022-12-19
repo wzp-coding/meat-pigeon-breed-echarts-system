@@ -2,7 +2,7 @@ export * from './helper'
 export * from './date'
 export * from './aes'
 import type { RcFile } from 'antd/es/upload'
-import { isString } from 'lodash'
+import { isEmpty, isNull, isString, isUndefined } from 'lodash'
 
 export function filterOption(input: string, option: any): boolean {
   if (Array.isArray(option.options)) {
@@ -52,4 +52,15 @@ export const trimObjectValue = (obj: any) => {
     trimObj[key] = obj[key];
   })
   return trimObj
+}
+
+export const clearEmptyObject = (obj: any) => {
+  const newObj:any = {};
+  Object.keys(obj).forEach(key => {
+    if(isEmpty(obj[key] || isNull(obj[key] || isUndefined(obj[key])))){
+      return;
+    }
+    newObj[key] = obj[key];
+  })
+  return newObj
 }

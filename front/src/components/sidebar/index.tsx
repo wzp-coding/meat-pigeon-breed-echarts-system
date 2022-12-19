@@ -32,7 +32,7 @@ const Sidebar: React.FC<Props> = function ({ collapsed }) {
           const findIdx = menu.children.findIndex(menu => pathname === menu.path)
           if (findIdx !== -1) {
             setSelectedKeys(menu.children[findIdx].path)
-            setOpenKeys([menu.name])
+            // setOpenKeys([menu.name])
             break
           }
         }

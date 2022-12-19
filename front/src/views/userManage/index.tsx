@@ -114,6 +114,10 @@ const UserList = () => {
     initParams();
   }, []);
 
+  const onPaginationChange = () => {
+    tableRef.current.getTableData({ keywords });
+  }
+
   return (
     <div className="today-task">
       <Table
@@ -126,6 +130,7 @@ const UserList = () => {
             currentRowData: null,
           })
         }
+        onPaginationChange={onPaginationChange}
         toolbar={
           <Search
             style={{ width: 400 }}

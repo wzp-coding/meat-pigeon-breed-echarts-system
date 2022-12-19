@@ -111,7 +111,8 @@ const _Modal: React.FC<Props> = function ({
           <NumberRange
             defaultValues={rowData?.yearEggs.split('~')}
             onChange={values => setState({ yearEggs: values })}
-          />&nbsp;个
+            unit='个'
+          />
         </Form.Item>
         <Form.Item
           label="四周龄体重"
@@ -127,8 +128,8 @@ const _Modal: React.FC<Props> = function ({
           <NumberRange
             defaultValues={rowData?.fourAgeWeight.split('~')}
             onChange={values => setState({ fourAgeWeight: values })}
+            unit='g'
           />
-          &nbsp;g
         </Form.Item>
         <Form.Item
           label="成年体重"
@@ -144,8 +145,8 @@ const _Modal: React.FC<Props> = function ({
           <NumberRange
             defaultValues={rowData?.adultWeight.split('~')}
             onChange={values => setState({ adultWeight: values })}
+            unit='g'
           />
-          &nbsp;g
         </Form.Item>
         <Form.Item
           label="特征"

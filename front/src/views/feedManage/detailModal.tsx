@@ -23,30 +23,38 @@ const _Modal: React.FC<Props> = function ({ visible, onCancel, rowData }) {
     >
       <Form preserve={false} labelCol={{ span: 4 }} wrapperCol={{ span: 20 }}>
         {rowData?.name && (
-          <Form.Item label="疾病名称" name="name">
+          <Form.Item label="饲料名称" name="name">
             <div>{rowData?.name}</div>
           </Form.Item>
         )}
-        {rowData?.description && (
-          <Form.Item label="症状描述" name="description">
-            <div>{rowData?.description}</div>
+        {rowData?.category && (
+          <Form.Item label="饲料种类" name="category">
+            <div>{rowData?.category}</div>
           </Form.Item>
         )}
-        {rowData?.treatment && (
-          <Form.Item label="治疗方法" name="treatment">
-            <div>{rowData?.treatment}</div>
+        {rowData?.purchaseTime && (
+          <Form.Item label="进货日期" name="purchaseTime">
+            <div>{rowData?.purchaseTime}</div>
           </Form.Item>
         )}
-        {rowData?.pictures && (
-          <Form.Item label="图片描述" name="pictures">
-            <TencentOssUpload
-              values={rowData.pictures.split(',')}
-              uploadProps={{
-                showUploadList: {
-                  showRemoveIcon: false,
-                },
-              }}
-            />
+        {rowData?.purchaseAmount && (
+          <Form.Item label="进货量" name="purchaseAmount">
+            <div>{rowData?.purchaseAmount}g</div>
+          </Form.Item>
+        )}
+        {rowData?.currentAmount && (
+          <Form.Item label="当前存量" name="currentAmount">
+            <div>{rowData?.currentAmount}g</div>
+          </Form.Item>
+        )}
+        {rowData?.produceTime && (
+          <Form.Item label="生产日期" name="produceTime">
+            <div>{rowData?.produceTime}</div>
+          </Form.Item>
+        )}
+        {rowData?.shelfLife && (
+          <Form.Item label="保质期" name="shelfLife">
+            <div>{rowData?.shelfLife}天</div>
           </Form.Item>
         )}
       </Form>

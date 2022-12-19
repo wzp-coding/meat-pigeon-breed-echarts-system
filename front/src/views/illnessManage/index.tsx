@@ -111,6 +111,10 @@ const IllnessList = () => {
     initParams();
   }, []);
 
+  const onPaginationChange = () => {
+    tableRef.current.getTableData({ keywords });
+  }
+
   return (
     <div className="today-task">
       <Table
@@ -123,6 +127,7 @@ const IllnessList = () => {
             currentRowData: null,
           })
         }
+        onPaginationChange={onPaginationChange}
         toolbar={
           <Search
             style={{ width: 400 }}
