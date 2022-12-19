@@ -3,10 +3,11 @@ const Controller = require('egg').Controller;
 
 // 定义创建接口的请求参数规则
 const validRule = {
+  name: 'string',
   category: 'string',
   purchaseTime: 'date',
   purchaseAmount: 'int',
-  currentAmount: 'int?',
+  currentAmount: 'int',
   produceTime: 'date',
   shelfLife: 'int',
 };
@@ -19,6 +20,7 @@ class FeedManageController extends Controller {
         page: 'int',
         pageSize: 'int',
         keywords: 'string?',
+        category: 'string?',
         purchaseTime: 'array?',
         purchaseAmount: 'array?',
         currentAmount: 'array?',

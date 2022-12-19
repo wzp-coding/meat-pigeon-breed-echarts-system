@@ -9,6 +9,7 @@ class FeedManageService extends Service {
       let { page, pageSize } = ctx.request.body;
       const {
         keywords = '',
+        category = '',
         purchaseTime = [],
         produceTime = [],
         purchaseAmount = [],
@@ -17,6 +18,7 @@ class FeedManageService extends Service {
       } = ctx.request.body;
       page = toInteger(page);
       pageSize = toInteger(pageSize);
+      const categoryWhere = category ? { category } : {};
       const query = {
         limit: pageSize,
         offset: pageSize * (page - 1),
@@ -25,7 +27,11 @@ class FeedManageService extends Service {
             category: {
               [Op.like]: '%' + keywords + '%',
             },
+            name: {
+              [Op.like]: '%' + keywords + '%',
+            },
           },
+          ...categoryWhere,
           ...geneRangeWhere(purchaseTime, 'purchaseTime'),
           ...geneRangeWhere(produceTime, 'produceTime'),
           ...geneRangeWhere(purchaseAmount, 'purchaseAmount'),

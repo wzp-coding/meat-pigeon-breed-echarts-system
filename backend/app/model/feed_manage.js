@@ -11,6 +11,11 @@ module.exports = app => {
       allowNull: false,
       comment: '唯一id',
     },
+    name: {
+      type: STRING,
+      allowNull: false,
+      comment: '饲料名称',
+    },
     category: {
       type: STRING(30),
       allowNull: false,

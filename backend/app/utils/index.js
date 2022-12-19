@@ -7,6 +7,7 @@ const decrypto = str =>
   CryptoJS.AES.decrypt(str, SECRET_KEYS).toString(CryptoJS.enc.Utf8);
 
 const moment = require('moment');
+const { isUndefined } = require('lodash');
 
 const randomDate = (year, month) => {
   // 随机生成0-11的数字
@@ -20,9 +21,8 @@ const randomDate = (year, month) => {
     .format('YYYY-MM-DD');
 };
 
-
 const geneRangeWhere = (arr = [], name) => {
-  if (!arr.length || arr.length !== 2 || !arr[0] || !arr[1]) {
+  if (!arr.length || arr.length !== 2 || isUndefined(arr[0]) || isUndefined(arr[1])) {
     return {};
   }
   return {
