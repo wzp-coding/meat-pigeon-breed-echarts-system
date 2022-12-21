@@ -2,9 +2,11 @@ import React from 'react';
 import { useSetState } from 'ahooks';
 import { serviceCreateFeed, serviceUpdateFeed } from '@/services';
 import { Modal, Form, Input, DatePicker, InputNumber, Select } from 'antd';
-import { trimInputValue, trimObjectValue } from '@/utils';
+import { transformTimeUnit, transformWeightUnit, trimInputValue, trimObjectValue } from '@/utils';
 import { CATEGORY_LIST } from './const';
 import moment from 'moment';
+import { useEffect } from 'react';
+import useUnitSelect from '@/hooks/useUnitSelect';
 
 type Props = {
   visible: boolean;
@@ -32,6 +34,41 @@ const _Modal: React.FC<Props> = function ({
   const [form] = Form.useForm();
   const [state, setState] = useSetState(initialState);
   // const removeFns = useRef<Function[]>([]);
+  const {
+    comp: shelfLifeUnitSelect,
+    value: shelfLifeUnit,
+    setValue: setShelfLifeUnit,
+  } = useUnitSelect([
+    {
+      label: '天',
+      value: 'day',
+    },
+    {
+      label: '月',
+      value: 'month',
+    },
+    {
+      label: '年',
+      value: 'year',
+    },
+  ]);
+  const {
+    comp: currentAmountUnitSelect,
+    value: currentAmountUnit,
+    setValue: setCurrentAmountUnit,
+  } = useUnitSelect(['g', 'kg']);
+  const {
+    comp: purchaseAmountUnitSelect,
+    value: purchaseAmountUnit,
+    setValue: setPurchaseAmountUnit,
+  } = useUnitSelect(['g', 'kg']);
+
+  // rowData变化时重置单位
+  useEffect(() => {
+    setShelfLifeUnit('day');
+    setCurrentAmountUnit('g');
+    setPurchaseAmountUnit('g');
+  }, [rowData]);
 
   const handleSubmitForm = async () => {
     try {
@@ -40,7 +77,9 @@ const _Modal: React.FC<Props> = function ({
       const params = trimObjectValue(values);
       params.purchaseTime = params.purchaseTime.format('YYYY-MM-DD');
       params.produceTime = params.produceTime.format('YYYY-MM-DD');
-      params.currentAmount = params.currentAmount || params.purchaseAmount;
+      params.purchaseAmount = transformWeightUnit(params.purchaseAmount, purchaseAmountUnit as 'kg' | 'g');
+      params.currentAmount = transformWeightUnit(params.currentAmount, currentAmountUnit as 'kg' | 'g') || params.purchaseAmount;
+      params.shelfLife = transformTimeUnit(params.shelfLife, shelfLifeUnit as 'month' | 'day' | 'year');
       (!rowData
         ? serviceCreateFeed(params)
         : serviceUpdateFeed(rowData.id, params)
@@ -81,11 +120,11 @@ const _Modal: React.FC<Props> = function ({
             {
               required: true,
               message: '请输入饲料名称',
-            }
+            },
           ]}
           getValueFromEvent={trimInputValue}
         >
-          <Input placeholder="请输入饲料名称"/>
+          <Input placeholder="请输入饲料名称" />
         </Form.Item>
         <Form.Item
           label="饲料种类"
@@ -116,13 +155,15 @@ const _Modal: React.FC<Props> = function ({
               required: true,
               message: '请选择进货日期',
             },
-            ({getFieldValue, validateFields, isFieldValidating}) => ({
+            ({ getFieldValue, validateFields, isFieldValidating }) => ({
               validator: (_, value) => {
                 const produceTime = getFieldValue('produceTime');
-                if(produceTime && !value.isSameOrAfter(produceTime, 'day')) {
-                  return Promise.reject(new Error('进货日期不能在生产日期之前'));
+                if (produceTime && !value.isSameOrAfter(produceTime, 'day')) {
+                  return Promise.reject(
+                    new Error('进货日期不能在生产日期之前')
+                  );
                 }
-                if(produceTime && !isFieldValidating(['produceTime'])) {
+                if (produceTime && !isFieldValidating(['produceTime'])) {
                   validateFields(['produceTime']);
                 }
                 return Promise.resolve();
@@ -141,13 +182,13 @@ const _Modal: React.FC<Props> = function ({
               required: true,
               message: '请输入进货量',
             },
-            ({getFieldValue, validateFields, isFieldValidating}) => ({
+            ({ getFieldValue, validateFields, isFieldValidating }) => ({
               validator: (_, value) => {
                 const currentAmount = getFieldValue('currentAmount');
-                if(currentAmount && value < currentAmount) {
+                if (currentAmount && value < currentAmount) {
                   return Promise.reject(new Error('进货量不能少于当前存量'));
                 }
-                if(currentAmount && !isFieldValidating(['currentAmount'])) {
+                if (currentAmount && !isFieldValidating(['currentAmount'])) {
                   validateFields(['currentAmount']);
                 }
                 return Promise.resolve();
@@ -155,7 +196,7 @@ const _Modal: React.FC<Props> = function ({
             }),
           ]}
         >
-          <InputNumber min={0} style={{ width: '100%' }} addonAfter="g" />
+          <InputNumber min={0} style={{ width: '100%' }} addonAfter={purchaseAmountUnitSelect} />
         </Form.Item>
         {rowData?.currentAmount && (
           <Form.Item
@@ -167,13 +208,13 @@ const _Modal: React.FC<Props> = function ({
                 required: true,
                 message: '请输入当前存量',
               },
-              ({getFieldValue, validateFields, isFieldValidating}) => ({
+              ({ getFieldValue, validateFields, isFieldValidating }) => ({
                 validator: (_, value) => {
                   const purchaseAmount = getFieldValue('purchaseAmount');
-                  if(purchaseAmount && value > purchaseAmount) {
+                  if (purchaseAmount && value > purchaseAmount) {
                     return Promise.reject(new Error('当前存量不能超过进货量'));
                   }
-                  if(!isFieldValidating(['purchaseAmount'])) {
+                  if (!isFieldValidating(['purchaseAmount'])) {
                     validateFields(['purchaseAmount']);
                   }
                   return Promise.resolve();
@@ -181,7 +222,7 @@ const _Modal: React.FC<Props> = function ({
               }),
             ]}
           >
-            <InputNumber min={0} style={{ width: '100%' }} addonAfter="g" />
+            <InputNumber min={0} style={{ width: '100%' }} addonAfter={currentAmountUnitSelect} />
           </Form.Item>
         )}
         <Form.Item
@@ -195,13 +236,15 @@ const _Modal: React.FC<Props> = function ({
               required: true,
               message: '请选择生产日期',
             },
-            ({getFieldValue, validateFields, isFieldValidating}) => ({
+            ({ getFieldValue, validateFields, isFieldValidating }) => ({
               validator: (_, value) => {
                 const purchaseTime = getFieldValue('purchaseTime');
-                if(purchaseTime && value.isAfter(purchaseTime, 'day')) {
-                  return Promise.reject(new Error('生产日期不能在进货日期之后'));
+                if (purchaseTime && value.isAfter(purchaseTime, 'day')) {
+                  return Promise.reject(
+                    new Error('生产日期不能在进货日期之后')
+                  );
                 }
-                if(purchaseTime && !isFieldValidating(['purchaseTime'])) {
+                if (purchaseTime && !isFieldValidating(['purchaseTime'])) {
                   validateFields(['purchaseTime']);
                 }
                 return Promise.resolve();
@@ -222,7 +265,11 @@ const _Modal: React.FC<Props> = function ({
             },
           ]}
         >
-          <InputNumber min={0} style={{ width: '100%' }} addonAfter="天" />
+          <InputNumber
+            min={0}
+            style={{ width: '100%' }}
+            addonAfter={shelfLifeUnitSelect}
+          />
         </Form.Item>
       </Form>
     </Modal>

@@ -40,12 +40,13 @@ export function base64ToBlob(base64Data: string) {
   })
 }
 
-export const trimInputValue = (e:any) => e.target?.value?.replace(/(^\s*)|(\s*$)/g, '');
+export const trimInputValue = (e: any) => e.target?.value?.replace(/(^\s*)|(\s*$)/g, '');
 
+/** 去除对象中值为字符串的前后空格 */
 export const trimObjectValue = (obj: any) => {
-  const trimObj:any = {};
+  const trimObj: any = {};
   Object.keys(obj).forEach(key => {
-    if(isString(obj[key])) {
+    if (isString(obj[key])) {
       trimObj[key] = obj[key].trim();
       return;
     }
@@ -54,13 +55,36 @@ export const trimObjectValue = (obj: any) => {
   return trimObj
 }
 
+/** 去除对象中的空值 */
 export const clearEmptyObject = (obj: any) => {
-  const newObj:any = {};
+  const newObj: any = {};
   Object.keys(obj).forEach(key => {
-    if(isEmpty(obj[key] || isNull(obj[key] || isUndefined(obj[key])))){
+    if (isEmpty(obj[key] || isNull(obj[key] || isUndefined(obj[key])))) {
       return;
     }
     newObj[key] = obj[key];
   })
   return newObj
+}
+
+/** 转化单位为 g */
+export const transformWeightUnit = (value: number, unit: 'kg' | 'g') => {
+  if (unit === 'kg') {
+    return value * 1000 | 0
+  }
+  return value;
+}
+
+/** 转化单位为 天 */
+export const transformTimeUnit = (value: number, unit: 'day' | 'month' | 'year') => {
+  if (unit === 'day') {
+    return value
+  } else if (unit === 'month') {
+    return value * 30 | 0
+  }
+  return value * 12 * 30 | 0;
+}
+
+export const transformRange = (range: number[], unit: 'kg' | 'g') => {
+  return range.map(num => transformWeightUnit(num, unit));
 }

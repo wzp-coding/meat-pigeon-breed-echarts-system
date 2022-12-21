@@ -42,8 +42,8 @@ const Condition: React.FC<Props> = ({ onSearch, onClear }) => {
   };
 
   return (
-    <Collapse bordered={false}>
-      <Panel header="高级搜索" key="condition">
+    <Collapse bordered={false} expandIcon={() => ''}>
+      <Panel header={<a>高级搜索</a>} key="condition" >
         <Form
           form={form}
           preserve={false}

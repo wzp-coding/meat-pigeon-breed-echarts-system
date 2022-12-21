@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   serviceCreatePigeonCategory,
   serviceUpdatePigeonCategory,
 } from '@/services';
 import { Modal, Form, Input } from 'antd';
-import { trimInputValue, trimObjectValue } from '@/utils';
+import { transformRange, trimInputValue, trimObjectValue } from '@/utils';
 import NumberRange from '@/components/number-range';
 import { useSetState } from 'ahooks';
-
+import useUnitSelect from '@/hooks/useUnitSelect';
 type Props = {
   visible: boolean;
   rowData?: Record<string, any> | null;
@@ -32,7 +32,22 @@ const _Modal: React.FC<Props> = function ({
 }) {
   const [form] = Form.useForm();
   const [state, setState] = useSetState(initialState);
-  // const removeFns = useRef<Function[]>([]);
+  const {
+    comp: fourAgeWeightUnitSelect,
+    value: fourAgeWeightUnit,
+    setValue: setFourAgeWeightUnit,
+  } = useUnitSelect(['g', 'kg']);
+  const {
+    comp: adultWeightUnitSelect,
+    value: adultWeightUnit,
+    setValue: setAdultWeightUnit,
+  } = useUnitSelect(['g', 'kg']);
+
+  // rowData变化时重置单位
+  useEffect(() => {
+    setFourAgeWeightUnit('g');
+    setAdultWeightUnit('g');
+  }, [rowData]);
 
   const handleSubmitForm = async () => {
     try {
@@ -40,8 +55,14 @@ const _Modal: React.FC<Props> = function ({
       const values = await form.validateFields();
       const params = trimObjectValue(values);
       params.yearEggs = params.yearEggs.join('~');
-      params.fourAgeWeight = params.fourAgeWeight.join('~');
-      params.adultWeight = params.adultWeight.join('~');
+      params.fourAgeWeight = transformRange(
+        params.fourAgeWeight,
+        fourAgeWeightUnit as 'g' | 'kg'
+      ).join('~');
+      params.adultWeight = transformRange(
+        params.adultWeight,
+        adultWeightUnit as 'g' | 'kg'
+      ).join('~');
       (!rowData
         ? serviceCreatePigeonCategory(params)
         : serviceUpdatePigeonCategory(rowData.id, params)
@@ -58,6 +79,7 @@ const _Modal: React.FC<Props> = function ({
       setState({ confirmLoading: false });
     }
   };
+
   const rangeValidator = (_: any, value: number[]) => {
     if (value && value[0] < value[1]) {
       return Promise.resolve();
@@ -111,7 +133,7 @@ const _Modal: React.FC<Props> = function ({
           <NumberRange
             defaultValues={rowData?.yearEggs.split('~')}
             onChange={values => setState({ yearEggs: values })}
-            unit='个'
+            unit="个"
           />
         </Form.Item>
         <Form.Item
@@ -128,7 +150,7 @@ const _Modal: React.FC<Props> = function ({
           <NumberRange
             defaultValues={rowData?.fourAgeWeight.split('~')}
             onChange={values => setState({ fourAgeWeight: values })}
-            unit='g'
+            unit={fourAgeWeightUnitSelect}
           />
         </Form.Item>
         <Form.Item
@@ -145,7 +167,7 @@ const _Modal: React.FC<Props> = function ({
           <NumberRange
             defaultValues={rowData?.adultWeight.split('~')}
             onChange={values => setState({ adultWeight: values })}
-            unit='g'
+            unit={adultWeightUnitSelect}
           />
         </Form.Item>
         <Form.Item

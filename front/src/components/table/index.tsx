@@ -170,14 +170,7 @@ const TableFC: FC<Props> = ({
   useEffect(() => {
     if (Array.isArray(columns)) {
       setState({
-        columns: [
-          {
-            title: '序号',
-            width: 60,
-            render: (_: any, $: any, i: number) => i + 1,
-            align: 'center',
-          },
-        ].concat(columns as []),
+        columns,
       });
     }
   }, [columns]);

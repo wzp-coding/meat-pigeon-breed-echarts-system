@@ -54,7 +54,7 @@ const PigeonCategoryList = () => {
     },
     {
       title: '操作',
-      width: 100,
+      width: 140,
       fixed: 'right',
       render: (row: any) => (
         <>

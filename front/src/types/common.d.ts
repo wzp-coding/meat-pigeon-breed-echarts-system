@@ -8,14 +8,16 @@ declare namespace CommonType {
         pageSize: number;
     }
 
-    export interface Conditions extends Pagination{
+    export interface Conditions extends Pagination {
         keywords?: string;
     }
 
-    export interface Headers extends AxiosRequestHeaders{
-        successAlert?: Boolean; 
+    export interface Headers extends AxiosRequestHeaders {
+        successAlert?: Boolean;
         errorAlert?: Boolean;
         isLoading?: Boolean;
         [key: string]: any;
     }
+
+    export interface Option { value: string, label: string }
 }

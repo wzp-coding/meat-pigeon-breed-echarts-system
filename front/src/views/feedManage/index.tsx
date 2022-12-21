@@ -4,10 +4,11 @@ import Table from '@/components/table';
 import FormModal from './formModal';
 import DetailModal from './detailModal';
 import { serviceGetFeedList, serviceDeleteFeed } from '@/services';
-import { Button, Form, Popconfirm } from 'antd';
+import { Button, Form, Popconfirm, Tag } from 'antd';
 import Search from 'antd/lib/input/Search';
 import Condition from './condition';
 import { Conditions } from './const';
+import moment from 'moment';
 
 interface State {
   showModal: boolean;
@@ -21,6 +22,16 @@ const initState: State = {
   currentRowData: null,
 };
 
+const tagOptions = {
+  willExpired: (days:number) => {
+    if(days <= 3){
+      return (<Tag color="warning">还有{days}天过期</Tag>)
+    }
+    return (<Tag color="success">{days}天内过期</Tag>)
+  },
+  expired: <Tag color="error">已过期</Tag>,
+}
+
 const FeedList = () => {
   const [form] = Form.useForm();
   const [state, setState] = useSetState(initState);
@@ -32,7 +43,7 @@ const FeedList = () => {
     {
       title: '名称',
       dataIndex: 'name',
-      width: 100,
+      width: 80,
     },
     {
       title: '种类',
@@ -62,11 +73,19 @@ const FeedList = () => {
     {
       title: '保质期(天)',
       dataIndex: 'shelfLife',
-      width: 60,
+      width: 80,
+      render: (value: number, row: any) => {
+        const alreadyDays = moment().diff(row.produceTime, 'days');
+        const leaveDays = value - alreadyDays;
+        if(leaveDays <= 0) {
+          return <div>{value}&nbsp;{tagOptions.expired}</div>
+        }
+        return <div>{value}&nbsp;{tagOptions.willExpired(leaveDays)}</div>
+      }
     },
     {
       title: '操作',
-      width: 100,
+      width: 140,
       fixed: 'right',
       render: (row: any) => (
         <>
