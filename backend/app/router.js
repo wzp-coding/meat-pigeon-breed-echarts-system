@@ -12,7 +12,6 @@ module.exports = app => {
   app.loader.loadToApp(directory, 'validate');
 
   // 饲料管理
-  router.post('/feedManage/feed', controller.feedManage.feedByHouseId);
   router.get('/feedManage/amount', controller.feedManage.amountGroupByCategory);
   router.get('/feedManage/group', controller.feedManage.findFeedsByGroup);
 
@@ -30,6 +29,8 @@ module.exports = app => {
   router.get('/pigeonCategoryManage/:id', controller.pigeonCategoryManage.show);
 
   // 鸽舍管理
+  router.post('/pigeonHouseManage/feed', controller.pigeonHouseManage.feedByHouseId);
+
   router.post('/pigeonHouseManage/create', controller.pigeonHouseManage.create);
   router.delete('/pigeonHouseManage/:id', controller.pigeonHouseManage.destroy);
   router.put('/pigeonHouseManage/:id', controller.pigeonHouseManage.update);

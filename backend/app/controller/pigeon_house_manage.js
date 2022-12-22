@@ -78,6 +78,21 @@ class PigeonHouseManageController extends Controller {
     ctx.status = 200;
     ctx.body = { code: 1, msg: '删除成功' };
   }
+
+  async feedByHouseId() {
+    const ctx = this.ctx;
+    ctx.validate({ houseId: 'int' }, ctx.request.body);
+    ctx.validate({ feeds: 'array' }, ctx.request.body);
+    try {
+      const result = await ctx.service.feedManage.feedByHouseId();
+      console.log('result: ', result);
+      ctx.status = 200;
+      ctx.body = { code: 1, msg: '投喂成功' };
+    } catch (error) {
+      console.error('error: ', error);
+      ctx.body = { code: -1, msg: '投喂失败' };
+    }
+  }
 }
 
 module.exports = PigeonHouseManageController;
