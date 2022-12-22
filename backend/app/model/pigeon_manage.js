@@ -15,10 +15,11 @@ module.exports = app => {
       allowNull: false,
       comment: '肉鸽编号',
     },
+    // 外键 => pigeon_house_manage(id)
     houseId: {
-      type: STRING(30),
+      type: INTEGER,
       allowNull: false,
-      comment: '鸽舍编号',
+      comment: '鸽舍 id',
     },
     // 外键 => pigeon_category_manage(id)
     categoryId: {
@@ -75,6 +76,12 @@ module.exports = app => {
       onDelete: 'NO ACTION',
       onUpdate: 'NO ACTION',
       as: 'categoryInfo',
+    });
+    app.model.PigeonManage.belongsTo(app.model.PigeonHouseManage, {
+      foreignKey: 'house_id',
+      onDelete: 'NO ACTION',
+      onUpdate: 'NO ACTION',
+      as: 'houseInfo',
     });
   };
   return pigeonManage;

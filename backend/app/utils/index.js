@@ -9,7 +9,7 @@ const decrypto = str =>
 const moment = require('moment');
 const { isUndefined } = require('lodash');
 
-const randomDate = (year, month) => {
+const randomDate = (year, month, day) => {
   // 随机生成0-11的数字
   const randomMonthNum = Math.floor(Math.random() * 11);
   // 随机生成1-30数字
@@ -17,8 +17,22 @@ const randomDate = (year, month) => {
   return moment()
     .year(year)
     .month(month ? month : randomMonthNum)
-    .date(randomDateNum)
+    .date(day ? day : randomDateNum)
     .format('YYYY-MM-DD');
+};
+
+const randomTime = (hour, minute, second) => {
+  // 随机生成0-23的数字--小时
+  const randomHour = Math.floor(Math.random() * 23);
+  // 随机生成1-59数字--分
+  const randomMinute = Math.floor(Math.random() * 59);
+  // 随机生成1-59数字--秒
+  const randomSecond = Math.floor(Math.random() * 59);
+  return moment()
+    .hour(hour ? hour : randomHour)
+    .minute(minute ? minute : randomMinute)
+    .second(second ? second : randomSecond)
+    .format('HH:mm:ss');
 };
 
 const geneRangeWhere = (arr = [], name) => {
@@ -37,5 +51,6 @@ module.exports = {
   encrypto,
   decrypto,
   randomDate,
+  randomTime,
   geneRangeWhere,
 };

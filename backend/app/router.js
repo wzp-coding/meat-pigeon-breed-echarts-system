@@ -28,6 +28,13 @@ module.exports = app => {
   router.post('/pigeonCategoryManage', controller.pigeonCategoryManage.index);
   router.get('/pigeonCategoryManage/:id', controller.pigeonCategoryManage.show);
 
+  // 鸽舍管理
+  router.post('/pigeonHouseManage/create', controller.pigeonHouseManage.create);
+  router.delete('/pigeonHouseManage/:id', controller.pigeonHouseManage.destroy);
+  router.put('/pigeonHouseManage/:id', controller.pigeonHouseManage.update);
+  router.post('/pigeonHouseManage', controller.pigeonHouseManage.index);
+  router.get('/pigeonHouseManage/:id', controller.pigeonHouseManage.show);
+
   // 用户管理
   router.post('/login', controller.user.login);
   router.post('/user/checkAccount', controller.user.checkAccount);

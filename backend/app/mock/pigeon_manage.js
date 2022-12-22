@@ -7,7 +7,7 @@ module.exports = new Array(100).fill(0).map((_, i) => {
   const feedDays = moment().diff(startFeedTime, 'days');
   return mock({
     pigeonId: [ 'a', 'b', 'c' ][i % 3] + i,
-    houseId: Random.integer(1, 5) + '号鸽舍',
+    houseId: Random.integer(1, 10),
     categoryId: Random.integer(1, 10),
     startFeedTime,
     feedCount: Random.integer(1, 10),

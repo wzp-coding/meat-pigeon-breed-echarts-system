@@ -21,6 +21,11 @@ class pigeonManageService extends Service {
             required: true,
           },
           {
+            model: ctx.model.PigeonHouseManage,
+            as: 'houseInfo',
+            required: true,
+          },
+          {
             model: ctx.model.IllnessManage,
             as: 'illnesses',
             through: {
@@ -66,7 +71,13 @@ class pigeonManageService extends Service {
       include: [
         {
           model: ctx.model.PigeonCategoryManage,
-          attributes: [],
+          as: 'categoryInfo',
+          required: true,
+        },
+        {
+          model: ctx.model.PigeonHouseManage,
+          as: 'houseInfo',
+          required: true,
         },
         {
           model: ctx.model.IllnessManage,
@@ -77,16 +88,16 @@ class pigeonManageService extends Service {
         },
       ],
       attributes: {
-        exclude: [ 'category_id' ],
-        include: [
-          [ ctx.model.col('pigeon_category_manage.category'), 'category' ],
-          [ ctx.model.col('pigeon_category_manage.year_eggs'), 'yearEggs' ],
-          [ ctx.model.col('pigeon_category_manage.adult_weight'), 'adultWeight' ],
-          [
-            ctx.model.col('pigeon_category_manage.four_age_weight'),
-            'fourAgeWeight',
-          ],
-        ],
+        exclude: [ 'category_id', 'house_id' ],
+        // include: [
+        //   [ ctx.model.col('pigeon_category_manage.category'), 'category' ],
+        //   [ ctx.model.col('pigeon_category_manage.year_eggs'), 'yearEggs' ],
+        //   [ ctx.model.col('pigeon_category_manage.adult_weight'), 'adultWeight' ],
+        //   [
+        //     ctx.model.col('pigeon_category_manage.four_age_weight'),
+        //     'fourAgeWeight',
+        //   ],
+        // ],
       },
     });
     return data;
