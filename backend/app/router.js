@@ -12,8 +12,9 @@ module.exports = app => {
   app.loader.loadToApp(directory, 'validate');
 
   // 饲料管理
-  router.post('/feedManage/feed/:id', controller.feedManage.feed);
+  router.post('/feedManage/feed', controller.feedManage.feedByHouseId);
   router.get('/feedManage/amount', controller.feedManage.amountGroupByCategory);
+  router.get('/feedManage/group', controller.feedManage.findFeedsByGroup);
 
   router.post('/feedManage/create', controller.feedManage.create);
   router.delete('/feedManage/:id', controller.feedManage.destroy);

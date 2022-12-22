@@ -102,6 +102,65 @@ class pigeonManageService extends Service {
     });
     return data;
   }
+
+  /** 创建鸽子 关联 疾病-鸽子表 */
+  async createPigeonInfo() {
+    const ctx = this.ctx;
+    return await ctx.model.transaction(async t => {
+      const pigeonData = await ctx.model.PigeonManage.create(
+        ctx.request.body,
+        {
+          transaction: t,
+        }
+      );
+      const { illnessIds } = ctx.request.body;
+      const insertDatas = illnessIds.map(illId => ({
+        illnessId: parseInt(illId),
+        pigeonId: pigeonData.dataValues.id,
+      }));
+      await ctx.model.IllnessPigeon.bulkCreate(insertDatas, {
+        transaction: t,
+      });
+    });
+  }
+
+  async updatePigeonInfo(pigeonData) {
+    const ctx = this.ctx;
+    return await ctx.model.transaction(async t => {
+      // 更新 pigeon_manage 表
+      await pigeonData.update(ctx.request.body, { transaction: t });
+      // 删除 illness_pigeon 表中 该鸽子 原来的关联关系
+      await ctx.model.IllnessPigeon.destroy(
+        {
+          where: {
+            pigeonId: pigeonData.dataValues.id,
+          },
+        },
+        {
+          transaction: t,
+        }
+      );
+      // 新增 illness_pigeon 表中 该鸽子 最新的关联关系
+      const { illnessIds } = ctx.request.body;
+      const insertDatas = illnessIds.map(illId => ({
+        illnessId: parseInt(illId),
+        pigeonId: pigeonData.dataValues.id,
+      }));
+      await ctx.model.IllnessPigeon.bulkCreate(insertDatas, {
+        transaction: t,
+      });
+    });
+  }
+
+  /** 根据 鸽舍id 查找 鸽子数组 */
+  async findPigeonsByHouseId(houseId) {
+    const ctx = this.ctx;
+    return await ctx.model.PigeonManage.findAll({
+      where: {
+        houseId,
+      },
+    });
+  }
 }
 
 module.exports = pigeonManageService;

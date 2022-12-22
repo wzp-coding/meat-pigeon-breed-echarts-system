@@ -88,21 +88,30 @@ class FeedManageController extends Controller {
     ctx.body = { code: 1, msg: '删除成功' };
   }
 
-  async feed() {
+  async feedByHouseId() {
     const ctx = this.ctx;
-    ctx.validate({ id: 'int' }, ctx.params);
-    ctx.validate({ amount: 'int' }, ctx.request.body);
-    const data = await ctx.model.FeedManage.findByPk(ctx.params.id);
+    ctx.validate({ houseId: 'int' }, ctx.request.body);
+    ctx.validate({ feeds: 'array' }, ctx.request.body);
+    try {
+      const result = await ctx.service.feedManage.feedByHouseId();
+      console.log('result: ', result);
+      ctx.status = 200;
+      ctx.body = { code: 1, msg: '投喂成功' };
+    } catch (error) {
+      console.error('error: ', error);
+      ctx.body = { code: -1, msg: '投喂失败' };
+    }
+  }
+
+  async findFeedsByGroup() {
+    const ctx = this.ctx;
+    const data = await ctx.service.feedManage.findFeedsByGroup();
     if (!data) {
-      ctx.body = { code: -1, msg: '喂养失败' };
+      ctx.body = { code: -1, msg: '查询失败' };
       return;
     }
-    await data.update({
-      ...data,
-      currentAmount: data.currentAmount - ctx.request.body.amount,
-    });
     ctx.status = 200;
-    ctx.body = { code: 1, msg: '喂养成功' };
+    ctx.body = { code: 1, msg: '查询成功', data };
   }
 
   async amountGroupByCategory() {

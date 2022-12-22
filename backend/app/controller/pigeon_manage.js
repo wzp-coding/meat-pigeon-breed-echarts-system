@@ -51,22 +51,7 @@ class PigeonManageController extends Controller {
     const ctx = this.ctx;
     ctx.validate(validRule, ctx.request.body);
     try {
-      const result = await ctx.model.transaction(async t => {
-        const pigeonData = await ctx.model.PigeonManage.create(
-          ctx.request.body,
-          {
-            transaction: t,
-          }
-        );
-        const { illnessIds } = ctx.request.body;
-        const insertDatas = illnessIds.map(illId => ({
-          illnessId: parseInt(illId),
-          pigeonId: pigeonData.dataValues.id,
-        }));
-        await ctx.model.IllnessPigeon.bulkCreate(insertDatas, {
-          transaction: t,
-        });
-      });
+      const result = await ctx.service.pigeonManage.createPigeonInfo();
       console.log('result: ', result);
       ctx.status = 200;
       ctx.body = { code: 1, msg: '创建成功' };
@@ -87,30 +72,7 @@ class PigeonManageController extends Controller {
       return;
     }
     try {
-      const result = await ctx.model.transaction(async t => {
-        // 更新 pigeon_manage 表
-        await pigeonData.update(ctx.request.body, { transaction: t });
-        // 删除 illness_pigeon 表中 该鸽子 原来的关联关系
-        await ctx.model.IllnessPigeon.destroy(
-          {
-            where: {
-              pigeonId: pigeonData.dataValues.id,
-            },
-          },
-          {
-            transaction: t,
-          }
-        );
-        // 新增 illness_pigeon 表中 该鸽子 最新的关联关系
-        const { illnessIds } = ctx.request.body;
-        const insertDatas = illnessIds.map(illId => ({
-          illnessId: parseInt(illId),
-          pigeonId: pigeonData.dataValues.id,
-        }));
-        await ctx.model.IllnessPigeon.bulkCreate(insertDatas, {
-          transaction: t,
-        });
-      });
+      const result = await ctx.service.pigeonManage.updatePigeonInfo(pigeonData);
       console.log('result: ', result);
       ctx.status = 200;
       ctx.body = { code: 1, msg: '更新成功' };
