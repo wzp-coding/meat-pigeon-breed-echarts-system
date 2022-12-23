@@ -29,7 +29,7 @@ class pigeonHouseManageService extends Service {
 
   async feedByHouseId() {
     const ctx = this.ctx;
-    const { houseId, feeds = [] } = ctx.request.body;
+    const { houseId, feeds = [], lastFeedTime } = ctx.request.body;
     return await ctx.model.transaction(async t => {
       // 查询 鸽舍id 的 鸽子们
       const rawPigeons = await ctx.service.pigeonManage.findPigeonsByHouseId(houseId);
@@ -54,6 +54,9 @@ class pigeonHouseManageService extends Service {
       }));
       // 批量更新 饲料表 的 当前存量
       await ctx.model.FeedManage.bulkCreate(newFeedsData, { updateOnDuplicate: [ 'currentAmount' ], transaction: t });
+      // 更新投喂时间
+      const house = await ctx.model.PigeonHouseManage.findByPk(houseId);
+      await house.update({ lastFeedTime }, { transaction: t });
     });
   }
 }

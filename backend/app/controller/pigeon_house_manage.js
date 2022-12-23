@@ -3,9 +3,9 @@ const Controller = require('egg').Controller;
 // 定义创建接口的请求参数规则
 const validRule = {
   name: 'string',
-  lastCleanTime: 'date',
+  lastCleanTime: 'dateTime?',
   cleanGap: 'int',
-  lastFeedTime: 'date',
+  lastFeedTime: 'dateTime?',
   feedGap: 'int',
 };
 
@@ -81,10 +81,9 @@ class PigeonHouseManageController extends Controller {
 
   async feedByHouseId() {
     const ctx = this.ctx;
-    ctx.validate({ houseId: 'int' }, ctx.request.body);
-    ctx.validate({ feeds: 'array' }, ctx.request.body);
+    ctx.validate({ houseId: 'int', feeds: 'array', lastFeedTime: 'dateTime' }, ctx.request.body);
     try {
-      const result = await ctx.service.feedManage.feedByHouseId();
+      const result = await ctx.service.pigeonHouseManage.feedByHouseId();
       console.log('result: ', result);
       ctx.status = 200;
       ctx.body = { code: 1, msg: '投喂成功' };

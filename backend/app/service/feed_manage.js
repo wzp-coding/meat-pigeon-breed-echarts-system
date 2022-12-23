@@ -51,9 +51,14 @@ class FeedManageService extends Service {
     const ctx = this.ctx;
     try {
       const categoryList = await this.findCategoryList();
-      const promiseAll = categoryList.map(async category => await this.findFeedsByCategory(category));
+      const promiseAll = categoryList.map(
+        async category => await this.findFeedsByCategory(category)
+      );
       const list = await Promise.all(promiseAll);
-      return list.map(itemArr => ({ label: itemArr[0].category, options: itemArr }));
+      return list.map(itemArr => ({
+        label: itemArr[0].category,
+        options: itemArr,
+      }));
     } catch (error) {
       ctx.logger.error(error);
     }
@@ -86,8 +91,22 @@ class FeedManageService extends Service {
       where: {
         category,
       },
-      // 优先使用 存量多、进货日期早 的饲料
-      order: [[ 'currentAmount', 'DESC' ], [ 'purchaseTime', 'ASC' ]],
+      // 优先使用 即将过期、存量少 的饲料
+      order: [
+        [
+          ctx.model.fn(
+            'DATEDIFF',
+            ctx.model.fn(
+              'ADDDATE',
+              ctx.model.col('produceTime'),
+              ctx.model.col('shelfLife')
+            ),
+            ctx.model.fn('CURRENT_DATE')
+          ),
+          'ASC',
+        ],
+        [ 'currentAmount', 'ASC' ],
+      ],
     });
   }
 

@@ -19,10 +19,14 @@ module.exports = app => {
     },
     lastCleanTime: {
       type: DATE,
-      allowNull: false,
+      allowNull: true,
       comment: '上次清洁日期',
       get() {
-        return moment(this.getDataValue('lastCleanTime')).format('YYYY-MM-DD HH:mm:ss');
+        const lastCleanTime = this.getDataValue('lastCleanTime');
+        if (!lastCleanTime) {
+          return '';
+        }
+        return moment(lastCleanTime).format('YYYY-MM-DD HH:mm:ss');
       },
     },
     cleanGap: {
@@ -32,10 +36,14 @@ module.exports = app => {
     },
     lastFeedTime: {
       type: DATE,
-      allowNull: false,
+      allowNull: true,
       comment: '上次投喂日期',
       get() {
-        return moment(this.getDataValue('lastFeedTime')).format('YYYY-MM-DD HH:mm:ss');
+        const lastFeedTime = this.getDataValue('lastFeedTime');
+        if (!lastFeedTime) {
+          return '';
+        }
+        return moment(lastFeedTime).format('YYYY-MM-DD HH:mm:ss');
       },
     },
     feedGap: {
