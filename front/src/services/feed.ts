@@ -25,3 +25,8 @@ export function serviceGetFeedList(data: CommonType.Conditions, headers: CommonT
 export function serviceDeleteFeed(id: string) {
   return http.delete('/feedManage/' + id)
 }
+
+// 分类获取饲料
+export function serviceGetFeedListByGroup(headers: CommonType.Headers = { successAlert: false, errorAlert: false } ) {
+  return http.get('/feedManage/group', { headers })
+}

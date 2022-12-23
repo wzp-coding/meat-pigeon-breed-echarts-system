@@ -17,6 +17,7 @@ export const MenuName = {
   账号设置: '账号设置',
   用户管理: '用户管理',
   养殖中心: '养殖中心',
+  鸽舍管理: '鸽舍管理'
 };
 
 export const HOME_SIDER_MENU_LIST = [
@@ -41,6 +42,10 @@ export const HOME_SIDER_MENU_LIST = [
       {
         path: '/home/pigeon',
         name: MenuName.肉鸽管理,
+      },
+      {
+        path: '/home/pigeonHouse',
+        name: MenuName.鸽舍管理,
       },
     ],
   },

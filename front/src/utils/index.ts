@@ -59,7 +59,7 @@ export const trimObjectValue = (obj: any) => {
 export const clearEmptyObject = (obj: any) => {
   const newObj: any = {};
   Object.keys(obj).forEach(key => {
-    if (isEmpty(obj[key] || isNull(obj[key] || isUndefined(obj[key])))) {
+    if (obj[key] === '' || isNull(obj[key]) || isUndefined(obj[key])) {
       return;
     }
     newObj[key] = obj[key];

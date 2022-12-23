@@ -88,7 +88,7 @@ const Sidebar: React.FC<Props> = function ({ collapsed }) {
       <div className="sider-menu-logo">
         {collapsed ? (
           <img src={logoImage} />
-        ) : config.title}
+        ) : <><img src={logoImage} style={{marginRight: '5px'}}/>{config.title}</>}
       </div>
 
       <Menu
