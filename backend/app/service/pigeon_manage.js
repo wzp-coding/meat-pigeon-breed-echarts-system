@@ -41,13 +41,10 @@ class pigeonManageService extends Service {
             pigeonId: {
               [Op.like]: '%' + keywords + '%',
             },
-            houseId: {
+            '$houseInfo.name$': {
               [Op.like]: '%' + keywords + '%',
             },
             '$categoryInfo.category$': {
-              [Op.like]: '%' + keywords + '%',
-            },
-            '$categoryInfo.feature$': {
               [Op.like]: '%' + keywords + '%',
             },
           },

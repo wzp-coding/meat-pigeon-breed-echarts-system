@@ -3,7 +3,7 @@ const Controller = require('egg').Controller;
 // 定义创建接口的请求参数规则
 const validRule = {
   pigeonId: 'string',
-  houseId: 'string',
+  houseId: 'int',
   categoryId: 'int',
   startFeedTime: 'date',
   feedCount: 'int',
