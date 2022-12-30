@@ -9,4 +9,12 @@ declare namespace PigeonCategoryType {
     
     export type UpdateReq = CreateReq
 
+    export interface Data {
+        id: number;
+        category: string;
+        yearEggs: string;
+        adultWeight: string;
+        fourAgeWeight: string;
+        feature: string
+    };
 }

@@ -33,4 +33,15 @@ declare namespace UserType {
     
     export type UpdateReq = Partial<Omit<CreateReq, 'account'>>
 
+    export interface Data {
+        id: number;
+		account: string;
+		name: string;
+		password: string;
+		avatar: string;
+		role: number;
+		phone: string;
+		email: string
+    }
+
 }

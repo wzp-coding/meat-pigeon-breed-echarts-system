@@ -17,4 +17,12 @@ declare namespace PigeonHouseType {
         }[]
     }
 
+    export interface Data {
+        lastCleanTime: string;
+        lastFeedTime: string;
+        id: number;
+        name: string;
+        cleanGap: number;
+        feedGap: number
+    };
 }

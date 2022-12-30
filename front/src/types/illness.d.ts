@@ -8,4 +8,12 @@ declare namespace IllnessType {
     
     export type UpdateReq = CreateReq
 
+    export interface Data {
+        id: number;
+        name: string;
+        description: string;
+        treatment:string;
+        pictures: string
+    }
+
 }

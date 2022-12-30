@@ -9,6 +9,7 @@ import IllnessManage from '@/views/illnessManage/index';
 import PigeonCategoryManage from '@/views/pigeonCategoryManage/index';
 import FeedManage from '@/views/feedManage/index';
 import PigeonHouseManage from '@/views/pigeonHouseManage/index';
+import PigeonManage from '@/views/pigeonManage/index';
 import { MenuName } from '@/constants';
 
 export function MainRoutes() {
@@ -102,6 +103,18 @@ export function MainRoutes() {
               meta={{
                 requiresAuth: true,
                 title: MenuName.饲料管理,
+              }}
+            />
+          ),
+        },
+        {
+          path: 'pigeon',
+          element: (
+            <PrivateRoute
+              element={PigeonManage}
+              meta={{
+                requiresAuth: true,
+                title: MenuName.肉鸽管理,
               }}
             />
           ),
